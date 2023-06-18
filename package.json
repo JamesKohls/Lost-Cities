@@ -1,0 +1,14 @@
+{
+  "name": "lost-cities",
+  "version": "1.0.0",
+  "description": "A recreation of the popular card game \"Lost Cities\"",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "James Kohls",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
