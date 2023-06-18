@@ -1,6 +1,6 @@
 // logic.test.js
 
-const { shuffle, deal } = require('../gameLogic.js');  
+const { createGamestate, shuffle, deal } = require('../gameLogic.js');  
 
 test('shuffles fifteen items', () => {
     let deck = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -19,10 +19,142 @@ test('shuffles fifteen items', () => {
 });
 
 test('deals cards from a deck', () => {
-    let deck = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-    let output = deal(deck)
+    let game = createGamestate()
+    game.deck = [
+        {
+            "color": "red",
+            "value": 1
+        },
+        {
+            "color": "red",
+            "value": 2
+        },
+        {
+            "color": "red",
+            "value": 3
+        },
+        {
+            "color": "red",
+            "value": 4
+        },
+        {
+            "color": "red",
+            "value": 5
+        },
+        {
+            "color": "red",
+            "value": 6
+        },
+        {
+            "color": "red",
+            "value": 7
+        },
+        {
+            "color": "red",
+            "value": 8
+        },
+        {
+            "color": "red",
+            "value": 9
+        },
+        {
+            "color": "red",
+            "value": 10
+        },
+        {
+            "color": "red",
+            "value": 11
+        },
+        {
+            "color": "red",
+            "value": 12
+        },
+        {
+            "color": "red",
+            "value": 13
+        },
+        {
+            "color": "red",
+            "value": 14
+        },
+        {
+            "color": "red",
+            "value": 15
+        },
+        {
+            "color": "red",
+            "value": 16
+        },
+    ]
+    deal(game)
 
-    expect(output[0]).toEqual([]);
-    expect(output[1]).toEqual([1,3,5,7,9,11,13,15]);
-    expect(output[2]).toEqual([2,4,6,8,10,12,14,16]);
+    expect(game.deck).toEqual([]);
+    expect(game.player1.hand).toEqual([
+        {
+            "color": "red",
+            "value": 1
+        },
+        {
+            "color": "red",
+            "value": 3
+        },
+        {
+            "color": "red",
+            "value": 5
+        },
+        {
+            "color": "red",
+            "value": 7
+        },
+        {
+            "color": "red",
+            "value": 9
+        },
+        {
+            "color": "red",
+            "value": 11
+        },
+        {
+            "color": "red",
+            "value": 13
+        },
+        {
+            "color": "red",
+            "value": 15
+        },
+    ]);
+    expect(game.player2.hand).toEqual([
+        {
+            "color": "red",
+            "value": 2
+        },
+        {
+            "color": "red",
+            "value": 4
+        },
+        {
+            "color": "red",
+            "value": 6
+        },
+        {
+            "color": "red",
+            "value": 8
+        },
+        {
+            "color": "red",
+            "value": 10
+        },
+        {
+            "color": "red",
+            "value": 12
+        },
+        {
+            "color": "red",
+            "value": 14
+        },
+        {
+            "color": "red",
+            "value": 16
+        },
+    ]);
 })

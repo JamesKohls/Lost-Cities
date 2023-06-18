@@ -19,21 +19,24 @@ const readLineAsync = msg => {
     });    
 }
 
+
 const startApp = async () => {
     // shuffe deck
-    game.shuffle(deck);
+    let gameState = game.createGamestate()
+    gameState.deck = game.shuffle(deck)
     // assign name
     let playerName = await readLineAsync('Please enter your name (default player1): ');
     playerName = playerName || 'Player1'; // If the user doesn't provide a name, use 'Player1' by default
     console.log(`Welcome, ${playerName}!`);
     // deal the cards
-    let deal = game.deal(deck)
-    deck = deal[0]
-    let deck1 = deal[1]
-    let deck2 = deal[2]
+
+    console.log(ui.printMiddle(gameState.middle))
+
+    game.deal(gameState)
+    console.log(ui.printExpedtions(gameState.player1.expeditions))
 
     console.log("current hand")
-    ui.displayHand(deck1)
+    console.log(ui.printHand(gameState.player1.hand))
     
     //await readLineAsync('Press Enter to deal cards...');
     // You can add more prompts here
