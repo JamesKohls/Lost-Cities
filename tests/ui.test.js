@@ -1,6 +1,6 @@
 // ui.test.js
 
-const { printHand, printExpedtions, printMiddle } = require('../uiLogic.js');  
+const { printHand, printExpedtions, printDiscard } = require('../uiLogic.js');  
 
 test('test expeditions', () => {
     let expeditions = {

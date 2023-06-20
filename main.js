@@ -29,20 +29,29 @@ const startApp = async () => {
     playerName = playerName || 'Player1'; // If the user doesn't provide a name, use 'Player1' by default
     console.log(`Welcome, ${playerName}!`);
     // deal the cards
-
-    console.log(ui.printMiddle(gameState.middle))
-
     game.deal(gameState)
-    console.log(ui.printExpedtions(gameState.player1.expeditions))
 
-    console.log("current hand")
-    console.log(ui.printHand(gameState.player1.hand))
-    
-    //await readLineAsync('Press Enter to deal cards...');
-    // You can add more prompts here
-    // e.g., await readLineAsync('Press Enter to deal cards...');
-    // Remember to close the readline interface when you're done:
-    // rl.close();
+    while(1) {
+        console.log(ui.printDiscard(gameState.discard))
+        console.log(ui.printExpedtions(gameState.player1.expeditions))
+        console.log("current hand")
+        console.log(ui.printHand(gameState.player1.hand))
+
+        // Ask the user to place a card
+        console.log("Please place a card...");
+        let cardIndex = await readLineAsync('Enter the index of the card you want to place: ');
+        let placePosition = await readLineAsync('Enter the position where you want to place the card (e for expeditions, d for discard): ');
+        let color = await readLineAsync('Enter the color of the card: ');
+        game.play(gameState, cardIndex, [placePosition, color]);
+
+        // Ask the user to draw a card
+        console.log("Please draw a card...");
+        let drawPosition = await readLineAsync('Enter the position where you want to draw a card from (d for deck, discard for discard): ');
+        color = drawPosition === 'd' ? null : await readLineAsync('Enter the color of the card: ');
+        game.draw(gameState, [drawPosition, color]);
+    }
+
+
 }
 
 startApp().catch(console.error);

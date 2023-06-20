@@ -23,7 +23,7 @@ function createGamestate(){
             yellow: [],
           },
         },
-        middle: { // object where each key is a color and each value is an array of cards
+        discard: { // object where each key is a color and each value is an array of cards
             red: [],
             green: [],
             white: [],
@@ -59,4 +59,24 @@ function deal(gameObj) {
     }
 }
 
-module.exports = { createGamestate, shuffle, deal };  
+function play(gameObj, cardIndex, position) {
+    // grab the selected card, remove it from deck
+    let selectedCard = gameObj.player1.hand.splice(cardIndex, 1)[0];
+    // move card to specified location
+    if (position[0] == "expeditions") {
+        gameObj.player1.expeditions[position[1]].push(selectedCard);
+    } else if (position[0] == "discard") {
+        gameObj.discard[position[1]].push(selectedCard);
+    }
+}
+
+function draw(gameObj, position){
+    if (position[0] == "deck") {
+        gameObj.player1.hand.push(gameObj.deck.shift());
+    } else if (position[0] == "discard") {
+        let selectedCard = gameObj.discard[position[1]].shift();
+        gameObj.player1.hand.push(selectedCard);
+    }
+}
+
+module.exports = { createGamestate, shuffle, deal, play, draw };  

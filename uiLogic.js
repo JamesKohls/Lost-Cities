@@ -62,31 +62,31 @@ function printExpedtions(playerExp){
     return str;
 }
 
-function printMiddle(middle) {
+function printDiscard(discard) {
     let str = '   '
 
-    if (middle.red[0]){
-        str += chalk.bold(printCard(middle.red[0]))
+    if (discard.red[0]){
+        str += chalk.bold(printCard(discard.red[0]))
     } else { str += chalk.bold(chalk.red("| | "))}
 
-    if (middle.green[0]){
-        str += chalk.bold(printCard(middle.green[0]))
+    if (discard.green[0]){
+        str += chalk.bold(printCard(discard.green[0]))
     } else { str += chalk.bold(chalk.green("| | "))}
 
-    if (middle.white[0]){
-        str += chalk.bold(printCard(middle.white[0]))
+    if (discard.white[0]){
+        str += chalk.bold(printCard(discard.white[0]))
     } else { str += chalk.bold(chalk.white("| | "))}
 
-    if (middle.blue[0]){
-        str += chalk.bold(printCard(middle.blue[0]))
+    if (discard.blue[0]){
+        str += chalk.bold(printCard(discard.blue[0]))
     } else { str += chalk.bold(chalk.blue("| | "))}
 
-    if (middle.yellow[0]){
-        str += chalk.bold(printCard(middle.yellow[0]))
+    if (discard.yellow[0]){
+        str += chalk.bold(printCard(discard.yellow[0]))
     } else { str += chalk.bold(chalk.yellow("| | "))}
 
     return str;
 }
 
 
-module.exports = { printHand, printExpedtions, printMiddle };  
+module.exports = { printHand, printExpedtions, printDiscard };  
