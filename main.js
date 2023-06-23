@@ -3,6 +3,8 @@ const game = require('./gameLogic.js');
 const ui = require('./uiLogic.js'); 
 const readline = require('readline');
 let deck = require('./cards.json');
+const Table = require('cli-table3');
+var colors = require('@colors/colors');
 
 console.log("Welcome to Lost Cities");
 
@@ -32,16 +34,20 @@ const startApp = async () => {
     game.deal(gameState)
 
     while(1) {
-        console.log(ui.printDiscard(gameState.discard))
-        console.log(ui.printExpedtions(gameState.player1.expeditions))
+        //console.log(ui.printDiscard(gameState.discard))
+        console.log(ui.printBoard(gameState).toString())
         console.log("current hand")
-        console.log(ui.printHand(gameState.player1.hand))
+        //console.log(ui.printHand(gameState.player1.hand))
+        console.log(ui.printHand(gameState.player1.hand).toString());
 
         // Ask the user to place a card
         console.log("Please place a card...");
-        let cardIndex = await readLineAsync('Enter the index of the card you want to place: ');
-        let placePosition = await readLineAsync('Enter the position where you want to place the card (e for expeditions, d for discard): ');
-        let color = await readLineAsync('Enter the color of the card: ');
+        let cardIndex = await readLineAsync('Pick a card by index (0,1,2,3,4): ');
+        let placePosition = await readLineAsync('Card Destination: (e for expeditions, d for discard): ');
+            if (placePosition == 'e'){
+
+            } else if (placePosition == 'd')
+        let color = await readLineAsync('Enter the expeditons color (r, g, w, b ,y): ');
         game.play(gameState, cardIndex, [placePosition, color]);
 
         // Ask the user to draw a card
