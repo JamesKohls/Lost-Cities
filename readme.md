@@ -1,29 +1,15 @@
-# Foobar
+# Lost Cities
 
-Foobar is a Python library for dealing with word pluralization.
+Lost Cities is a Javascript recreatoion of the popular card game "Lost Cities"
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
-```bash
-pip install foobar
-```
+1. Pull or download this repo
+2. ensure node is installed
 
 ## Usage
 
-```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
-```
+node main.js
 
 ## Contributing
 
