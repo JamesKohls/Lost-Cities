@@ -158,3 +158,10 @@ test('deals cards from a deck', () => {
         },
     ]);
 })
+
+// test('places a card', () => { 
+//     let game = createGamestate()
+//     game.deal(gameState)
+//     game.play(game, "play 0 0");
+
+// })

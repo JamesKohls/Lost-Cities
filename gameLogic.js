@@ -71,9 +71,9 @@ function play(gameObj, playString) {
     let inputArr = playString.split(" ");
     let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
     if (inputArr[0] == 'play') {
-        gameObj.player1.expeditions[indexDict[inputArr[2]]].push(selectedCard);
+        gameObj.player1.expeditions[selectedCard.color].push(selectedCard);
     } else if (inputArr[0] == 'discard') {
-        gameObj.discard[indexDict[inputArr[2]]].push(selectedCard);
+        gameObj.discard[selectedCard.color].push(selectedCard);
     } 
 }
 

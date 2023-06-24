@@ -43,7 +43,7 @@ const startApp = async () => {
         console.log(ui.printHand(gameState.player1.hand).toString());
 
         // Ask the user to place a card
-        console.log("input: (play/discard) (handIndex) (expeditionIndex)");
+        console.log("input: (play/discard) (handIndex)");
         let playString = await readLineAsync("");
         
         game.play(gameState, playString);
