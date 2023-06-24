@@ -69,12 +69,15 @@ function deal(gameObj) {
 
 function play(gameObj, playString) {
     let inputArr = playString.split(" ");
-    let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
     if (inputArr[0] == 'play') {
+        let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
         gameObj.player1.expeditions[selectedCard.color].push(selectedCard);
     } else if (inputArr[0] == 'discard') {
+        let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
         gameObj.discard[selectedCard.color].push(selectedCard);
-    } 
+    } else {
+        throw new Error("Unknown command!");
+    }
 }
 
 function draw(gameObj, drawString){
@@ -84,6 +87,8 @@ function draw(gameObj, drawString){
     } else if (inputArr[0] == "discard") {
         let selectedCard = gameObj.discard[inputArr[1]].shift();
         gameObj.player1.hand.push(selectedCard);
+    } else {
+        throw new Error("Unknown command!");
     }
 }
 
