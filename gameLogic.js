@@ -34,6 +34,14 @@ function createGamestate(){
     return gameState;
 }
 
+var indexDict = {
+    0: "red",
+    1: "green",
+    2: "white",
+    3: "blue",
+    4: "yellow"
+};
+
 // Fisher-Yates Shuffle
 function shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
@@ -59,22 +67,22 @@ function deal(gameObj) {
     }
 }
 
-function play(gameObj, cardIndex, position) {
-    // grab the selected card, remove it from deck
-    let selectedCard = gameObj.player1.hand.splice(cardIndex, 1)[0];
-    // move card to specified location
-    if (position[0] == "expeditions") {
-        gameObj.player1.expeditions[position[1]].push(selectedCard);
-    } else if (position[0] == "discard") {
-        gameObj.discard[position[1]].push(selectedCard);
-    }
+function play(gameObj, playString) {
+    let inputArr = playString.split(" ");
+    let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
+    if (inputArr[0] == 'play') {
+        gameObj.player1.expeditions[indexDict[inputArr[2]]].push(selectedCard);
+    } else if (inputArr[0] == 'discard') {
+        gameObj.discard[indexDict[inputArr[2]]].push(selectedCard);
+    } 
 }
 
-function draw(gameObj, position){
-    if (position[0] == "deck") {
+function draw(gameObj, drawString){
+    let inputArr = drawString.split(" ");
+    if (inputArr[0] == "draw") {
         gameObj.player1.hand.push(gameObj.deck.shift());
-    } else if (position[0] == "discard") {
-        let selectedCard = gameObj.discard[position[1]].shift();
+    } else if (inputArr[0] == "discard") {
+        let selectedCard = gameObj.discard[inputArr[1]].shift();
         gameObj.player1.hand.push(selectedCard);
     }
 }

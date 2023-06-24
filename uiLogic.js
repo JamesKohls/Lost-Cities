@@ -112,40 +112,35 @@ function printDiscard(discard) {
     return str;
 }
 
-function printBoard(gameObj){
-    let colors = ["red", "green", "white", "blue", "yellow"];
-    let table = new Table({ style: { head: [], border: [] } });
-
-    let rowP2 = colors.map(color => gameObj.player2.expeditions[color].length > 0 ? printCard(gameObj.player2.expeditions[color][0]) : ' ');
-    let rowDiscard = ['red', 'green', 'white', 'blue', 'yellow'].map(color => {
-        if (gameObj.discard[color].length > 0) {
-            return printCard(gameObj.discard[color][0]);
-        } else {
-            switch (color) {
-                case 'red':
-                    return 'X'.red;
-                case 'green':
-                    return 'X'.green;
-                case 'white':
-                    return 'X'.white;
-                case 'blue':
-                    return 'X'.blue;
-                case 'yellow':
-                    return 'X'.yellow;
-                default:
-                    return 'X';
-            }
-        }
-    });
-    
-    let rowP1 = colors.map(color => gameObj.player1.expeditions[color].length > 0 ? printCard(gameObj.player1.expeditions[color][0]) : ' ');
-
-    table.push(rowP2, rowDiscard, rowP1);
-
-    //console.log(table.toString());
-    return table
+// Determine the length of the longest expedition
+function longestExpedition(player) {
+    return Math.max(...Object.values(player.expeditions).map(arr => arr.length));
 }
 
+function printBoard(gameObj) {
+    let table = new Table({ style: { head: [], border: [] } });
+    
+    let longestP1 = longestExpedition(gameObj.player1);
+    let longestP2 = longestExpedition(gameObj.player2);
+
+    // Create rows for player 2 expeditions
+    for (let i = 0; i < longestP2; i++) {
+        let rowP2 = ['red', 'green', 'white', 'blue', 'yellow'].map(color => gameObj.player2.expeditions[color][i] ? printCard(gameObj.player2.expeditions[color][i]) : '   ');
+        table.push(rowP2);
+    }
+
+    // Create a row for the discard pile
+    let rowDiscard = ['red', 'green', 'white', 'blue', 'yellow'].map(color => gameObj.discard[color][0] ? printCard(gameObj.discard[color][0]) : colors[color]('X'));
+    table.push(rowDiscard);
+
+    // Create rows for player 1 expeditions
+    for (let i = 0; i < longestP1; i++) {
+        let rowP1 = ['red', 'green', 'white', 'blue', 'yellow'].map(color => gameObj.player1.expeditions[color][i] ? printCard(gameObj.player1.expeditions[color][i]) : '   ');
+        table.push(rowP1);
+    }
+
+    return table
+}
 
 
 module.exports = { printHand, printExpedtions, printDiscard, printBoard };  

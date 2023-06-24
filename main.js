@@ -35,26 +35,23 @@ const startApp = async () => {
 
     while(1) {
         //console.log(ui.printDiscard(gameState.discard))
-        console.log(ui.printBoard(gameState).toString())
+        //console.log(ui.printBoard(gameState).toString())
+        console.log(gameState.discard)
+        console.log(gameState.player1.expeditions)
         console.log("current hand")
         //console.log(ui.printHand(gameState.player1.hand))
         console.log(ui.printHand(gameState.player1.hand).toString());
 
         // Ask the user to place a card
-        console.log("Please place a card...");
-        let cardIndex = await readLineAsync('Pick a card by index (0,1,2,3,4): ');
-        let placePosition = await readLineAsync('Card Destination: (e for expeditions, d for discard): ');
-            if (placePosition == 'e'){
-
-            } else if (placePosition == 'd')
-        let color = await readLineAsync('Enter the expeditons color (r, g, w, b ,y): ');
-        game.play(gameState, cardIndex, [placePosition, color]);
+        console.log("input: (play/discard) (handIndex) (expeditionIndex)");
+        let playString = await readLineAsync("");
+        
+        game.play(gameState, playString);
 
         // Ask the user to draw a card
-        console.log("Please draw a card...");
-        let drawPosition = await readLineAsync('Enter the position where you want to draw a card from (d for deck, discard for discard): ');
-        color = drawPosition === 'd' ? null : await readLineAsync('Enter the color of the card: ');
-        game.draw(gameState, [drawPosition, color]);
+        console.log("input: draw OR discard (index)");
+        let drawString = await readLineAsync("");
+        game.draw(gameState, drawString);
     }
 
 
