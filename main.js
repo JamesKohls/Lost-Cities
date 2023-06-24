@@ -36,9 +36,11 @@ const startApp = async () => {
     while(1) {
         //console.log(ui.printDiscard(gameState.discard))
         //console.log(ui.printBoard(gameState).toString())
+        console.log("DISCARD")
         console.log(gameState.discard)
+        console.log("EXPEDITIONS")
         console.log(gameState.player1.expeditions)
-        console.log("current hand")
+        console.log("HAND")
         //console.log(ui.printHand(gameState.player1.hand))
         console.log(ui.printHand(gameState.player1.hand).toString());
 

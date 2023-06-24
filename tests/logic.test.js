@@ -1,6 +1,15 @@
 // logic.test.js
 
-const { createGamestate, shuffle, deal } = require('../gameLogic.js');  
+let cards = require('../cards.json');
+const { createGamestate, shuffle, deal, play, draw } = require('../gameLogic.js');  
+
+function unshuffledGameInit(){
+    let game = createGamestate()
+    game.deck = [...cards]  // Creates a copy of cardDeck
+    deal(game)
+    return game
+}
+
 
 test('shuffles fifteen items', () => {
     let deck = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -19,149 +28,35 @@ test('shuffles fifteen items', () => {
 });
 
 test('deals cards from a deck', () => {
-    let game = createGamestate()
-    game.deck = [
-        {
-            "color": "red",
-            "value": 1
-        },
-        {
-            "color": "red",
-            "value": 2
-        },
-        {
-            "color": "red",
-            "value": 3
-        },
-        {
-            "color": "red",
-            "value": 4
-        },
-        {
-            "color": "red",
-            "value": 5
-        },
-        {
-            "color": "red",
-            "value": 6
-        },
-        {
-            "color": "red",
-            "value": 7
-        },
-        {
-            "color": "red",
-            "value": 8
-        },
-        {
-            "color": "red",
-            "value": 9
-        },
-        {
-            "color": "red",
-            "value": 10
-        },
-        {
-            "color": "red",
-            "value": 11
-        },
-        {
-            "color": "red",
-            "value": 12
-        },
-        {
-            "color": "red",
-            "value": 13
-        },
-        {
-            "color": "red",
-            "value": 14
-        },
-        {
-            "color": "red",
-            "value": 15
-        },
-        {
-            "color": "red",
-            "value": 16
-        },
-    ]
-    deal(game)
+    let game = unshuffledGameInit()
+    expect(game.deck.length).toEqual(44);
+    expect(game.player1.hand.length).toEqual(8);
+    expect(game.player2.hand.length).toEqual(8);
 
-    expect(game.deck).toEqual([]);
-    expect(game.player1.hand).toEqual([
-        {
-            "color": "red",
-            "value": 1
-        },
-        {
-            "color": "red",
-            "value": 3
-        },
-        {
-            "color": "red",
-            "value": 5
-        },
-        {
-            "color": "red",
-            "value": 7
-        },
-        {
-            "color": "red",
-            "value": 9
-        },
-        {
-            "color": "red",
-            "value": 11
-        },
-        {
-            "color": "red",
-            "value": 13
-        },
-        {
-            "color": "red",
-            "value": 15
-        },
-    ]);
-    expect(game.player2.hand).toEqual([
-        {
-            "color": "red",
-            "value": 2
-        },
-        {
-            "color": "red",
-            "value": 4
-        },
-        {
-            "color": "red",
-            "value": 6
-        },
-        {
-            "color": "red",
-            "value": 8
-        },
-        {
-            "color": "red",
-            "value": 10
-        },
-        {
-            "color": "red",
-            "value": 12
-        },
-        {
-            "color": "red",
-            "value": 14
-        },
-        {
-            "color": "red",
-            "value": 16
-        },
-    ]);
+    expect(game.player1.hand[0]).toEqual({"color": "red", "value": 0});
+    expect(game.player1.hand[3]).toEqual({"color": "red", "value": 5});
+    expect(game.player1.hand[7]).toEqual({"color": "green", "value": 0});
+
+    expect(game.player2.hand[0]).toEqual({"color": "red", "value": 0});
+    expect(game.player2.hand[3]).toEqual({"color": "red", "value": 6});
+    expect(game.player2.hand[7]).toEqual({"color": "green", "value": 2});
 })
 
-// test('places a card', () => { 
-//     let game = createGamestate()
-//     game.deal(gameState)
-//     game.play(game, "play 0 0");
+test('places a valid card in expedition', () => { 
+    let game = unshuffledGameInit()
+    play(game, "play 0");
+    expect(game.player1.expeditions.red).toEqual([{ color: 'red', value: 0 }]);
+})
 
-// })
+test('places a valid card in discard', () => { 
+    let game = unshuffledGameInit()
+    play(game, "discard 0");
+    expect(game.discard.red).toEqual([{ color: 'red', value: 0 }]);
+})
+
+test('takes a card from discard', () => { 
+    let game = unshuffledGameInit()
+    game.discard.yellow.push({"color": "yellow", "value": 5})
+    //play(game, "play 0");
+    expect(game.player1.expeditions.red).toEqual([{ color: 'red', value: 0 }]);
+})

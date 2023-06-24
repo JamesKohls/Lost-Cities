@@ -44,5 +44,6 @@ const { printHand, printExpedtions, printDiscard } = require('../uiLogic.js');
 
 
 test('test', () => {
-    expect(true.toEqual(true));
-})
+    let test = "1";
+    expect(test).toEqual("1");
+});
