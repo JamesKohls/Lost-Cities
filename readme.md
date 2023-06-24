@@ -21,3 +21,9 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## To-Do Lists
+1. Gamelogic - error messages (shouldn't just crash)
+2. Tests - Create Unit tests
+3. Make it turn based (Right now it's only player 1)
+4. UILogic - Make the cards in hand are in order
