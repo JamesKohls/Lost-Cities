@@ -34,13 +34,13 @@ function createGamestate(){
     return gameState;
 }
 
-var indexDict = {
-    0: "red",
-    1: "green",
-    2: "white",
-    3: "blue",
-    4: "yellow"
-};
+// var indexDict = {
+    //0: "red",
+    //1: "green",
+    //2: "white",
+    //3: "blue",
+    //4: "yellow"
+//};
 
 // Fisher-Yates Shuffle
 function shuffle(array) {
