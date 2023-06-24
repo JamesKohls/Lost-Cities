@@ -49,7 +49,7 @@ const startApp = async () => {
         game.play(gameState, playString);
 
         // Ask the user to draw a card
-        console.log("input: draw OR discard (index)");
+        console.log("input: draw OR discard (expedition)");
         let drawString = await readLineAsync("");
         game.draw(gameState, drawString);
     }
