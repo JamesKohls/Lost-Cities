@@ -51,8 +51,8 @@ function printHand(hand){
     }
 
     table.push(
-      [handarr[0], handarr[1], handarr[2], handarr[3], handarr[4], handarr[5], handarr[6], handarr[7] ],
-      [0, 1, 2, 3, 4, 5, 6, 7 ]
+      ["Cards in Hand", handarr[0], handarr[1], handarr[2], handarr[3], handarr[4], handarr[5], handarr[6], handarr[7] ],
+      ["Hand Index", 0, 1, 2, 3, 4, 5, 6, 7 ]
     );
 
     return table;

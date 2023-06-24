@@ -33,7 +33,7 @@ const startApp = async () => {
     // deal the cards
     game.deal(gameState)
 
-    while(1) {
+    while(true) {
         //console.log(ui.printDiscard(gameState.discard))
         //console.log(ui.printBoard(gameState).toString())
         console.log("DISCARD")
@@ -45,15 +45,34 @@ const startApp = async () => {
         console.log(ui.printHand(gameState.player1.hand).toString());
 
         // Ask the user to place a card
-        console.log("input: (play/discard) (handIndex)");
-        let playString = await readLineAsync("");
-        
-        game.play(gameState, playString);
+        while (true) {
+            console.log("input: (play/discard) (handIndex)");
+            let playString = await readLineAsync("");
+
+            try {
+                game.play(gameState, playString);
+                break;
+            }
+
+            catch (error) {
+                console.log(colors.red("Invalid input. Please try again."))
+            }
+        }
 
         // Ask the user to draw a card
-        console.log("input: draw OR discard (expedition)");
-        let drawString = await readLineAsync("");
-        game.draw(gameState, drawString);
+        while (true) {
+            console.log("input: draw OR discard (expedition)");
+            let drawString = await readLineAsync("");
+
+            try {
+                game.draw(gameState, drawString);
+                break;
+            }
+
+            catch (error) {
+                console.log(colors.red("Invalid input. Please try again."))
+            }
+        }        
     }
 
 
