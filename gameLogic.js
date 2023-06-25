@@ -160,18 +160,20 @@ function score(gameObj) {
         let sum = 0;
         let wagercount = 0;
         
+        // if an expedition has no card, then the expedition score should be 0 (not -20)
         if (expedition.length == 0) {
             totalScore += 0;
             continue;
         }
-        
+
+        // if an expedition has at least 1 card, then the expedition score should be calculated based on the following function:
+        // expedition score = (-20 + sum of the value of all cards in the expedition) * (number of wager cards in the expedition + 1)
         for (let card of expedition) {
             sum += card.value;
             if (card.value == 0) {
                 wagercount++;
             }
         }
-
         let expeditionScore = (-20 + sum) * (wagercount + 1);
         totalScore += expeditionScore;
     }
