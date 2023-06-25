@@ -87,21 +87,16 @@ function play(gameObj, playString) {
         }
         else {
             let selectedCard = gameObj[gameObj.turn].hand.splice(inputArr[1], 1)[0];
-    
+            let deckLength = gameObj[gameObj.turn].expeditions[selectedCard.color].length
+        
             if (action == 'play') {
-                // if (gameObj.player1.expeditions[selectedCard.color].length > 0){
-                //     if (gameObj.player1.expeditions[selectedCard.color][0].value) {
-                //         console.log("test")
-                //     }
-                // }
-                let curVal = gameObj[gameObj.turn].expeditions[selectedCard.color][0]
+                let curVal = gameObj[gameObj.turn].expeditions[selectedCard.color][deckLength-1]
                 if (curVal) {
-                    gameObj[gameObj.turn].expeditions[selectedCard.color]
+                    if (curVal.value > selectedCard.value) {
+                        throw new Error(colors.red("Invalid Move: cannot place card of lower value"));
+                    }
                 }
-                //if ()
-
-                gameObj[gameObj.turn].expeditions[selectedCard.color].push(selectedCard);   
-                
+                gameObj[gameObj.turn].expeditions[selectedCard.color].push(selectedCard);         
             } 
             else if (action == 'discard') {
                 gameObj.discard[selectedCard.color].push(selectedCard);

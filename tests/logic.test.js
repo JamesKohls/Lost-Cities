@@ -76,11 +76,25 @@ test('takes a card from discard', () => {
 
 test('places a card in the wrong order', () => { 
     let game = unshuffledGameInit();
-    play(game, "play 6");
+    play(game, "play 3");
+    play(game, "play 3");
+    play(game, "play 3");
     expect(() => {
         play(game, "play 0");
-    }).toThrow('Invalid placement');
+    }).toThrow('Invalid Move: cannot place card of lower value');
 });
+
+test('places a card in the wrong order', () => { 
+    let game = unshuffledGameInit();
+    play(game, "play 0");
+    play(game, "play 0");
+    play(game, "play 1");
+    play(game, "play 1");
+    expect(() => {
+        play(game, "play 0");
+    }).toThrow('Invalid Move: cannot place card of lower value');
+});
+
 
 test('take a card from empty discard', () => { 
     let game = unshuffledGameInit();
