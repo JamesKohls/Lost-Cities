@@ -1,4 +1,5 @@
 // gameLogic.js
+var colors = require('@colors/colors');
 
 function createGamestate(){
     let gameState = {
@@ -34,13 +35,13 @@ function createGamestate(){
     return gameState;
 }
 
-// var indexDict = {
-    //0: "red",
-    //1: "green",
-    //2: "white",
-    //3: "blue",
-    //4: "yellow"
-//};
+var indexDict = {
+    0: "red",
+    1: "green",
+    2: "white",
+    3: "blue",
+    4: "yellow"
+};
 
 // Fisher-Yates Shuffle
 function shuffle(array) {
@@ -69,22 +70,62 @@ function deal(gameObj) {
 
 function play(gameObj, playString) {
     let inputArr = playString.split(" ");
-    let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
-    if (inputArr[0] == 'play') {
-        gameObj.player1.expeditions[selectedCard.color].push(selectedCard);
-    } else if (inputArr[0] == 'discard') {
-        gameObj.discard[selectedCard.color].push(selectedCard);
+    if (inputArr.length !== 2) {
+        throw new Error(colors.red("Invalid input. Please enter 'play (handIndex)' or 'discard (handIndex)'"));
+      }
+    else {
+        action = inputArr[0].toLowerCase();
+        handIndex = parseInt(inputArr[1]);
+    
+        if (action !== "play" && action !== "discard") {
+            throw new Error(colors.red("Invalid action. Please enter 'play (handIndex)' or 'discard (handIndex)'"));
+        }       
+    
+        else if (isNaN(handIndex) || handIndex < 0 || handIndex > 7) {
+            throw new Error(colors.red("Invalid hand index. Please enter a number from 0 to 7 for handIndex."));
+        }
+        else {
+            let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
+    
+            if (action == 'play') {
+                gameObj.player1.expeditions[selectedCard.color].push(selectedCard);
+            } 
+            else if (action == 'discard') {
+                gameObj.discard[selectedCard.color].push(selectedCard);
+            } 
+        }
     } 
 }
 
 function draw(gameObj, drawString){
     let inputArr = drawString.split(" ");
-    if (inputArr[0] == "draw") {
-        gameObj.player1.hand.push(gameObj.deck.shift());
-    } else if (inputArr[0] == "discard") {
-        let selectedCard = gameObj.discard[inputArr[1]].shift();
-        gameObj.player1.hand.push(selectedCard);
+    action = inputArr[0].toLowerCase();
+    if (action != "draw" && action != "discard" || inputArr.length > 2) {
+        throw new Error(colors.red("Invalid input. Please enter 'draw' or 'discard (expedition)'."));
     }
+                
+    if (action == "draw") {
+        if (inputArr.length > 1) {
+            throw new Error(colors.red("Invalid input. Please enter only 'draw' for drawing from the deck."));
+        }
+        else {
+            gameObj.player1.hand.push(gameObj.deck.shift());
+        }
+    }
+    if (action == "discard") {
+        expedition = inputArr[1].toLowerCase();
+        const validExpeditions = ["red", "green", "white", "blue", "yellow"];
+        if (inputArr.length !== 2) {
+            throw new Error(colors.red("Invalid input. Please enter 'discard (expedition)'."));
+        }           
+        else if (!validExpeditions.includes(expedition)) {
+            throw new Error(colors.red("Invalid expedition. Please enter one of the following colors: red, green, white, blue, yellow."));
+        }
+        else {
+            let selectedCard = gameObj.discard[expedition].shift();
+            gameObj.player1.hand.push(selectedCard);
+        }
+    }  
 }
 
 module.exports = { createGamestate, shuffle, deal, play, draw };  
