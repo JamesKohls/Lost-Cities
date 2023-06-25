@@ -80,3 +80,12 @@ test('places a card in the wrong order', () => {
         play(game, "play 0");
     }).toThrow('Invalid placement');
 });
+
+test('take a card from empty discard', () => { 
+    let game = unshuffledGameInit();
+    play(game, "play 0");
+    expect(() => {
+        draw(game, "discard red")
+    }).toThrow('Invalid Move');
+});
+
