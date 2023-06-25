@@ -72,3 +72,11 @@ test('takes a card from discard', () => {
     draw(game, "discard yellow")
     expect(game.player1.hand).toContainEqual({ color: 'yellow', value: 5 });
 })
+
+test('places a card in the wrong order', () => { 
+    let game = unshuffledGameInit();
+    play(game, "play 6");
+    expect(() => {
+        play(game, "play 0");
+    }).toThrow('Invalid placement');
+});
