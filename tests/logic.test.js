@@ -10,7 +10,6 @@ function unshuffledGameInit(){
     return game
 }
 
-
 test('shuffles fifteen items', () => {
     let deck = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
     let shuffledDeck = [...deck]; // make a copy of the deck
@@ -94,7 +93,6 @@ test('places a card in the wrong order', () => {
         play(game, "play 0");
     }).toThrow('Invalid Move: cannot place card of lower value');
 });
-
 
 test('take a card from empty discard', () => { 
     let game = unshuffledGameInit();
