@@ -28,3 +28,13 @@ Please make sure to update tests as appropriate.
 2. Tests - Create Unit tests
 3. Make it turn based (Right now it's only player 1)
 4. UILogic - Make the cards in hand are in order
+5. AILogic
+    - Initialize game state, updates it after every single move/action (both players)
+    - Initialize Q value, updates it after every single move/action (AI only)
+    - Come up with all possible states that AI may encounter
+    - Create a reward function (Positive rewards for favorable moves or winning the game and vice versa; rewards value can be the same for all favorable moves and vice versa)
+    - Create an action selection function (determined by the highest Q value in the Q table)
+    - Constructa neural network 
+        - First layer/ Input layer: Uses for state obervations
+        - Second Layer and Third Layer: Based on the policy and Training Loop
+        - Fourth Layer / Output Layer: Q values table
