@@ -53,6 +53,7 @@ test('places valid cards in expeditions', () => {
     for(let i =0; i<24; i++){
         play(game, "play 0");
         draw(game, "draw");
+        game.turn = "player1"
     }
     expect(game.player1.expeditions.red.length).toEqual(6);
     expect(game.player1.expeditions.green.length).toEqual(10);
@@ -86,6 +87,6 @@ test('take a card from empty discard', () => {
     play(game, "play 0");
     expect(() => {
         draw(game, "discard red")
-    }).toThrow('Invalid Move');
+    }).toThrow('Invalid Move: pile is empty');
 });
 

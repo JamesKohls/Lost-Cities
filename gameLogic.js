@@ -3,6 +3,7 @@ var colors = require('@colors/colors');
 
 function createGamestate(){
     let gameState = {
+        turn: "player1",
         deck: [],
         player1: {
           hand: [], // array of cards
@@ -85,10 +86,17 @@ function play(gameObj, playString) {
             throw new Error(colors.red("Invalid hand index. Please enter a number from 0 to 7 for handIndex."));
         }
         else {
-            let selectedCard = gameObj.player1.hand.splice(inputArr[1], 1)[0];
+            let selectedCard = gameObj[gameObj.turn].hand.splice(inputArr[1], 1)[0];
     
             if (action == 'play') {
-                gameObj.player1.expeditions[selectedCard.color].push(selectedCard);
+                // if (gameObj.player1.expeditions[selectedCard.color].length > 0){
+                //     if (gameObj.player1.expeditions[selectedCard.color][0].value) {
+                //         console.log("test")
+                //     }
+                // }
+
+                gameObj[gameObj.turn].expeditions[selectedCard.color].push(selectedCard);   
+                
             } 
             else if (action == 'discard') {
                 gameObj.discard[selectedCard.color].push(selectedCard);
@@ -109,7 +117,8 @@ function draw(gameObj, drawString){
             throw new Error(colors.red("Invalid input. Please enter only 'draw' for drawing from the deck."));
         }
         else {
-            gameObj.player1.hand.push(gameObj.deck.shift());
+            // case where deck in empty, but game should automatically end
+            gameObj[gameObj.turn].hand.push(gameObj.deck.shift());
         }
     }
     if (action == "discard") {
@@ -122,8 +131,13 @@ function draw(gameObj, drawString){
             throw new Error(colors.red("Invalid expedition. Please enter one of the following colors: red, green, white, blue, yellow."));
         }
         else {
-            let selectedCard = gameObj.discard[expedition].shift();
-            gameObj.player1.hand.push(selectedCard);
+            if (gameObj.discard[expedition].length > 0){
+                let selectedCard = gameObj.discard[expedition].shift();
+                gameObj[gameObj.turn].hand.push(selectedCard);
+            } else {
+                throw new Error(colors.red("Invalid Move: pile is empty"));
+            }
+
         }
     }  
 }
