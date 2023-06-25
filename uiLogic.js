@@ -43,6 +43,15 @@ function printCard(card) {
 
 
 function printHand(hand){
+    hand.sort((a, b) => {
+        if (a.color !== b.color) {
+            const colorOrder = ["red", "green", "white", "blue", "yellow"];
+            return colorOrder.indexOf(a.color) - colorOrder.indexOf(b.color); // Sort by color
+        } 
+        else {
+            return a.value - b.value; // Sort by number
+        }
+    });
     let table = new Table({ style: { head: [], border: [] } });
 
     handarr = []
