@@ -94,6 +94,11 @@ function play(gameObj, playString) {
                 //         console.log("test")
                 //     }
                 // }
+                let curVal = gameObj[gameObj.turn].expeditions[selectedCard.color][0]
+                if (curVal) {
+                    gameObj[gameObj.turn].expeditions[selectedCard.color]
+                }
+                //if ()
 
                 gameObj[gameObj.turn].expeditions[selectedCard.color].push(selectedCard);   
                 
@@ -142,4 +147,12 @@ function draw(gameObj, drawString){
     }  
 }
 
-module.exports = { createGamestate, shuffle, deal, play, draw };  
+function turn(gameObj){
+    if (gameObj.turn == 'player1'){
+        gameObj.turn = 'player2'
+    } else {
+        gameObj.turn = 'player1'
+    }
+}
+
+module.exports = { createGamestate, shuffle, deal, play, draw, turn };  
