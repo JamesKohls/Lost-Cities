@@ -150,4 +150,32 @@ function turn(gameObj){
     }
 }
 
-module.exports = { createGamestate, shuffle, deal, play, draw, turn };  
+function score(gameObj) {
+    let totalScore = 0;
+    let turn = gameObj.turn;
+    let expeditions = gameObj[turn].expeditions;
+
+    for (let color in expeditions) {
+        let expedition = expeditions[color];
+        let sum = 0;
+        let wagercount = 0;
+        
+        if (expedition.length == 0) {
+            totalScore += 0;
+            continue;
+        }
+        
+        for (let card of expedition) {
+            sum += card.value;
+            if (card.value == 0) {
+                wagercount++;
+            }
+        }
+
+        let expeditionScore = (-20 + sum) * (wagercount + 1);
+        totalScore += expeditionScore;
+    }
+    return totalScore;
+}
+
+module.exports = { createGamestate, shuffle, deal, play, draw, turn, score};  

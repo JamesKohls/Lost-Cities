@@ -1,7 +1,7 @@
 // logic.test.js
 
 let cards = require('../cards.json');
-const { createGamestate, shuffle, deal, play, draw } = require('../gameLogic.js');  
+const { createGamestate, shuffle, deal, play, draw, score} = require('../gameLogic.js');  
 
 function unshuffledGameInit(){
     let game = createGamestate()
@@ -104,3 +104,24 @@ test('take a card from empty discard', () => {
     }).toThrow('Invalid Move: pile is empty');
 });
 
+test('calculates score for expeditions with no cards', () => {
+    let game = unshuffledGameInit();
+    expect(score(game)).toEqual(0)
+});
+
+test('calculates score for expeditions with only wager cards', () => {
+    let game = unshuffledGameInit();
+    game.player1.expeditions.red = [{ color: 'red', value: 0 },];
+    game.player1.expeditions.white = [{ color: 'white', value: 0 },];
+    game.player1.expeditions.blue = [{ color: 'blue', value: 0 },];
+    expect(score(game)).toEqual(-120);
+  });
+
+test('calculates score for expeditions with wager cards', () => {
+    let game = unshuffledGameInit();
+    game.player1.expeditions.red = [
+        { color: 'red', value: 0 }, { color: 'red', value: 2 }, { color: 'red', value: 5 }, { color: 'red', value: 7 },];
+    game.player1.expeditions.white = [{ color: 'white', value: 10},];
+    game.player1.expeditions.blue = [{ color: 'blue', value: 5 },];
+    expect(score(game)).toEqual((14-20)*(1+1)+(10-20)*(0+1)+(5-20)*(0+1));
+});
