@@ -48,6 +48,17 @@ test('places a valid card in expedition', () => {
     expect(game.player1.expeditions.red).toEqual([{ color: 'red', value: 0 }]);
 })
 
+test('places valid cards in expeditions', () => { 
+    let game = unshuffledGameInit()
+    for(let i =0; i<24; i++){
+        play(game, "play 0");
+        draw(game, "draw");
+    }
+    expect(game.player1.expeditions.red.length).toEqual(6);
+    expect(game.player1.expeditions.green.length).toEqual(10);
+    expect(game.player1.expeditions.white.length).toEqual(8);
+})
+
 test('places a valid card in discard', () => { 
     let game = unshuffledGameInit()
     play(game, "discard 0");
@@ -57,6 +68,7 @@ test('places a valid card in discard', () => {
 test('takes a card from discard', () => { 
     let game = unshuffledGameInit()
     game.discard.yellow.push({"color": "yellow", "value": 5})
-    //play(game, "play 0");
-    expect(game.player1.expeditions.red).toEqual([{ color: 'red', value: 0 }]);
+    play(game, "play 0");
+    draw(game, "discard yellow")
+    expect(game.player1.hand).toContainEqual({ color: 'yellow', value: 5 });
 })
