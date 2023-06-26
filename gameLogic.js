@@ -151,33 +151,59 @@ function turn(gameObj){
 }
 
 function score(gameObj) {
-    let totalScore = 0;
-    let turn = gameObj.turn;
-    let expeditions = gameObj[turn].expeditions;
+    let scores = {player1: 0, player2: 0};
+    let expeditions1 = gameObj.player1.expeditions;
+    let expeditions2 = gameObj.player2.expeditions;
 
-    for (let color in expeditions) {
-        let expedition = expeditions[color];
-        let sum = 0;
-        let wagercount = 0;
+    // player 1
+    for (let color in expeditions1) {
+        let expedition1 = expeditions1[color];
+        let sum1 = 0;
+        let wagercount1 = 0;
         
         // if an expedition has no card, then the expedition score should be 0 (not -20)
-        if (expedition.length == 0) {
-            totalScore += 0;
+        if (expedition1.length == 0) {
+            scores.player1 += 0;
             continue;
         }
 
         // if an expedition has at least 1 card, then the expedition score should be calculated based on the following function:
         // expedition score = (-20 + sum of the value of all cards in the expedition) * (number of wager cards in the expedition + 1)
-        for (let card of expedition) {
-            sum += card.value;
+        for (let card of expedition1) {
+            sum1 += card.value;
             if (card.value == 0) {
-                wagercount++;
+                wagercount1++;
             }
         }
-        let expeditionScore = (-20 + sum) * (wagercount + 1);
-        totalScore += expeditionScore;
+        let expeditionScore1 = (-20 + sum1) * (wagercount1 + 1);
+        scores.player1 += expeditionScore1;
     }
-    return totalScore;
+
+    // player 2
+    for (let color in expeditions2) {
+        let expedition2 = expeditions2[color];
+        let sum2 = 0;
+        let wagercount2 = 0;
+        
+        // if an expedition has no card, then the expedition score should be 0 (not -20)
+        if (expedition2.length == 0) {
+            scores.player2 += 0;
+            continue;
+        }
+
+        // if an expedition has at least 1 card, then the expedition score should be calculated based on the following function:
+        // expedition score = (-20 + sum of the value of all cards in the expedition) * (number of wager cards in the expedition + 1)
+        for (let card of expedition2) {
+            sum2 += card.value;
+            if (card.value == 0) {
+                wagercount2++;
+            }
+        }
+        let expeditionScore2 = (-20 + sum2) * (wagercount2 + 1);
+        scores.player2 += expeditionScore2;
+    }
+
+    return scores;
 }
 
 module.exports = { createGamestate, shuffle, deal, play, draw, turn, score};  

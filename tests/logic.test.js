@@ -104,7 +104,11 @@ test('take a card from empty discard', () => {
 
 test('calculates score for expeditions with no cards', () => {
     let game = unshuffledGameInit();
-    expect(score(game)).toEqual(0)
+
+    expect(score(game)).toEqual({
+        player1: 0,
+        player2: 0
+    });
 });
 
 test('calculates score for expeditions with only wager cards', () => {
@@ -112,14 +116,46 @@ test('calculates score for expeditions with only wager cards', () => {
     game.player1.expeditions.red = [{ color: 'red', value: 0 },];
     game.player1.expeditions.white = [{ color: 'white', value: 0 },];
     game.player1.expeditions.blue = [{ color: 'blue', value: 0 },];
-    expect(score(game)).toEqual(-120);
+
+    game.player2.expeditions.red = [{ color: 'greem', value: 0 },];
+    game.player2.expeditions.white = [{ color: 'yellow', value: 0 },];
+
+    expect(score(game)).toEqual({
+        player1: -120,
+        player2: -80
+    });
   });
 
-test('calculates score for expeditions with wager cards', () => {
+test('calculates score for expeditions with wager cards (Only player1 has cards)', () => {
     let game = unshuffledGameInit();
     game.player1.expeditions.red = [
         { color: 'red', value: 0 }, { color: 'red', value: 2 }, { color: 'red', value: 5 }, { color: 'red', value: 7 },];
     game.player1.expeditions.white = [{ color: 'white', value: 10},];
     game.player1.expeditions.blue = [{ color: 'blue', value: 5 },];
-    expect(score(game)).toEqual((14-20)*(1+1)+(10-20)*(0+1)+(5-20)*(0+1));
+
+    expect(score(game)).toEqual({
+        player1: -37,
+        player2: 0
+    });
+});
+
+test('calculates score for expeditions with wager cards (Both Players have cards)', () => {
+    let game = unshuffledGameInit();
+
+    // player 1
+    game.player1.expeditions.red = [
+        { color: 'red', value: 0 }, { color: 'red', value: 2 }, { color: 'red', value: 5 }, { color: 'red', value: 7 },];
+    game.player1.expeditions.white = [{ color: 'white', value: 10},];
+    game.player1.expeditions.blue = [{ color: 'blue', value: 5 },];
+
+    // player 2
+    game.player2.expeditions.red = [
+        { color: 'red', value: 0 }, { color: 'red', value: 3 }, { color: 'red', value: 7 }, { color: 'red', value: 10 },];
+    game.player2.expeditions.white = [{ color: 'white', value: 0 }, { color: 'white', value: 10},];
+    game.player2.expeditions.blue = [{ color: 'green', value: 7 },];
+
+    expect(score(game)).toEqual({
+        player1: -37,
+        player2: -33
+    });
 });
