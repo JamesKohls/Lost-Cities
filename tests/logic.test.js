@@ -8,6 +8,16 @@ function unshuffledGameInit(){
     game.deck = [...cards]  // Creates a copy of cardDeck
     deal(game)
     return game
+    // - What the hands looks like in unshuffled Input
+    //-P1- -P2- 
+    // R0   R0
+    // R0   R2
+    // R3   R4
+    // R5   R6
+    // R7   R8
+    // R9   R10
+    // G0   G0
+    // G0   G2
 }
 
 test('shuffles fifteen items', () => {
@@ -89,9 +99,24 @@ test('places a card in the wrong order', () => {
     play(game, "play 0");
     play(game, "play 1");
     play(game, "play 1");
+    //expect(game.player1.hand.length).toEqual(8);
     expect(() => {
         play(game, "play 0");
     }).toThrow('Invalid Move: cannot place card of lower value');
+});
+
+test('ensure hand is refilled on bad input', () => { 
+    let game = unshuffledGameInit();
+    play(game, "play 4");
+    draw(game, "draw")
+    expect(game.player1.hand.length).toEqual(8);
+    expect(() => {
+        play(game, "play 3");
+    }).toThrow('Invalid Move: cannot place card of lower value');
+    play(game, "play 4");
+    expect(game.player1.hand.length).toEqual(7);
+    draw(game, "draw")
+    expect(game.player1.hand.length).toEqual(8);
 });
 
 test('take a card from empty discard', () => { 

@@ -95,6 +95,7 @@ function play(gameObj, playString) {
                 let curVal = gameObj[gameObj.turn].expeditions[selectedCard.color][deckLength-1]
                 if (curVal) {
                     if (curVal.value > selectedCard.value) {
+                        gameObj[gameObj.turn].hand.push(selectedCard) // put selected card back
                         throw new Error(colors.red("Invalid Move: cannot place card of lower value"));
                     }
                 }
