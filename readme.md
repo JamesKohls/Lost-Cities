@@ -24,11 +24,8 @@ Please make sure to update tests as appropriate.
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## To-Do Lists
-1. Gamelogic - error messages (shouldn't just crash)
-2. Tests - Create Unit tests
-3. Make it turn based (Right now it's only player 1)
-4. UILogic - Make the cards in hand are in order
-5. AILogic
+1. Tests - Create Unit tests
+2. AILogic
     - Initialize game state, updates it after every single move/action (both players)
     - Initialize Q value, updates it after every single move/action (AI only)
     - Come up with all possible states that AI may encounter
