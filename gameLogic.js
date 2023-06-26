@@ -206,4 +206,8 @@ function score(gameObj) {
     return scores;
 }
 
-module.exports = { createGamestate, shuffle, deal, play, draw, turn, score};  
+function endgame(gameObj) {
+    return gameObj.deck.length == 0;
+}
+
+module.exports = { createGamestate, shuffle, deal, play, draw, turn, score, endgame};  

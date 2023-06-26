@@ -1,7 +1,7 @@
 // logic.test.js
 
 let cards = require('../cards.json');
-const { createGamestate, shuffle, deal, play, draw, score} = require('../gameLogic.js');  
+const { createGamestate, shuffle, deal, play, draw, score, endgame} = require('../gameLogic.js');  
 
 function unshuffledGameInit(){
     let game = createGamestate()
@@ -158,4 +158,13 @@ test('calculates score for expeditions with wager cards (Both Players have cards
         player1: -37,
         player2: -33
     });
+});
+
+test('checks if game ends when no cards left in the deck', () => {
+    let game = unshuffledGameInit();
+    expect(endgame(game)).toBe(false);
+  
+    // Simulate emptying the deck
+    game.deck = [];
+    expect(endgame(game)).toBe(true);
 });
