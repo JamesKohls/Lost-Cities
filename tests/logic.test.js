@@ -1,7 +1,7 @@
 // logic.test.js
 
 let cards = require('../cards.json');
-const { createGamestate, shuffle, deal, play, draw, score, endgame} = require('../gameLogic.js');  
+const { createGamestate, shuffle, deal, play, draw, turn, score, endgame} = require('../gameLogic.js');  
 
 function unshuffledGameInit(){
     let game = createGamestate()
@@ -100,6 +100,15 @@ test('take a card from empty discard', () => {
     expect(() => {
         draw(game, "discard red")
     }).toThrow('Invalid Move: pile is empty');
+});
+
+test('next turn', () => { 
+    let game = unshuffledGameInit();
+    play(game, "play 0");
+    turn(game)
+    play(game, "play 0");
+    expect(game.player1.expeditions.red.length).toEqual(1);
+    expect(game.player1.expeditions.red.length).toEqual(1);
 });
 
 test('calculates score for expeditions with no cards', () => {

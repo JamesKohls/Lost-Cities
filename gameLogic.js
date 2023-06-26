@@ -6,6 +6,7 @@ function createGamestate(){
         turn: "player1",
         deck: [],
         player1: {
+          name: "player1",
           hand: [], // array of cards
           expeditions: { // object where each key is a color and each value is an array of cards
             red: [],
@@ -16,6 +17,7 @@ function createGamestate(){
           },
         },
         player2: {
+          name: "player2",
           hand: [], // array of cards
           expeditions: { // object where each key is a color and each value is an array of cards
             red: [],

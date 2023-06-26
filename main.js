@@ -26,23 +26,31 @@ const startApp = async () => {
     // shuffe deck
     let gameState = game.createGamestate()
     gameState.deck = game.shuffle(deck)
-    // assign name
-    let playerName = await readLineAsync('Please enter your name (default player1): ');
-    playerName = playerName || 'Player1'; // If the user doesn't provide a name, use 'Player1' by default
-    console.log(`Welcome, ${playerName}!`);
+    // assign name(s)
+    let p1 = await readLineAsync('Please enter your name (default player1): ');
+    p1 = p1 || 'Player1'; // If the user doesn't provide a name, use 'Player1' by default
+    gameState.player1.name = p1
+    console.log(`Welcome, ${p1}!`);
+
+    let p2 = await readLineAsync('Please enter your name (default player2): ');
+    p2 = p2 || 'Player2'; // If the user doesn't provide a name, use 'Player1' by default
+    console.log(`Welcome, ${p2}!\n`);
+    gameState.player2.name = p2
+
     // deal the cards
     game.deal(gameState)
 
     while(true) {
         //console.log(ui.printDiscard(gameState.discard))
         //console.log(ui.printBoard(gameState).toString())
-        console.log("DISCARD")
-        console.log(gameState.discard)
-        console.log("EXPEDITIONS")
-        console.log(gameState.player1.expeditions)
+        console.log(`-- ${gameState[gameState.turn].name}'s TURN-- \n`)
+
+        console.log("DISCARD") 
+        console.log(gameState.discard, "\n")
+        console.log(`${gameState[gameState.turn].name}'s EXPEDITIONS`)
+        console.log(gameState[gameState.turn].expeditions, "\n")
         console.log("HAND")
-        //console.log(ui.printHand(gameState.player1.hand))
-        console.log(ui.printHand(gameState.player1.hand).toString());
+        console.log(ui.printHand(gameState[gameState.turn].hand).toString(), "\n");
 
         // Ask the user to play/discard a card from hand
         while (true) {
@@ -60,8 +68,12 @@ const startApp = async () => {
         // Ask the user to draw a card from the deck or from the expedition
 
         while (true) {
-            console.log("input: draw OR discard (expedition)");
+            console.log("input: draw OR discard (expedition), enter: draw");
             let drawString = await readLineAsync("");
+            if (drawString == ''){
+                game.draw(gameState, "draw");
+                break;
+            }
             try {
                 game.draw(gameState, drawString);
                 break;
@@ -70,9 +82,8 @@ const startApp = async () => {
                 console.log(colors.red(error.message));
             }
         }
-
-
-
+        // go next
+        game.turn(gameState)
     }
 }
 
