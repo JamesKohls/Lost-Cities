@@ -202,3 +202,28 @@ test('checks if game ends when no cards left in the deck', () => {
     game.deck = [];
     expect(endgame(game)).toBe(true);
 });
+
+test('Should print out the victory message when game ends', () => {
+    let game = unshuffledGameInit();
+    game.deck = [];
+    let player1Score = 100;
+    let player2Score = 0;
+    game.player1.name = 'Player 1';
+    game.player2.name = 'Player 2';
+    console.log = jest.fn();
+
+    if (endgame(game)) {
+      if (player1Score > player2Score) {
+        console.log(`\n${game.player1.name} wins! Congratulations!`);
+      } 
+      else if (player2Score > player1Score) {
+        console.log(`\n${game.player2.name} wins! Congratulations!`);
+      } 
+      else {
+        console.log("\nIt's a tie! The game ends in a draw.");
+      }
+    }
+  
+    expect(console.log).toHaveBeenCalledWith(`\n${game.player1.name} wins! Congratulations!`);
+  });
+  

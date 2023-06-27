@@ -88,7 +88,7 @@ function play(gameObj, playString) {
             throw new Error(colors.red("Invalid hand index. Please enter a number from 0 to 7 for handIndex."));
         }
         else {
-            let selectedCard = gameObj[gameObj.turn].hand.splice(inputArr[1], 1)[0];
+            let selectedCard = gameObj[gameObj.turn].hand.splice(handIndex, 1)[0];
             let deckLength = gameObj[gameObj.turn].expeditions[selectedCard.color].length
         
             if (action == 'play') {

@@ -25,8 +25,8 @@ const readLineAsync = msg => {
 const startApp = async () => {
     let totalScores = { player1: 0, player2: 0 };
 
-    for (let gameCount = 1; gameCount <= 3; gameCount++) {
-        console.log('GAME ${gameCount)');
+    for (let gameCount = 1; gameCount <= 1; gameCount++) {
+        console.log(`Game ${gameCount}:`);
         // shuffe deck
         let gameState = game.createGamestate()
         gameState.deck = game.shuffle(deck)
@@ -48,7 +48,7 @@ const startApp = async () => {
         while (true) {
             //console.log(ui.printDiscard(gameState.discard))
             //console.log(ui.printBoard(gameState).toString())
-            console.log(`-- ${gameState[gameState.turn].name}'s TURN-- \n`)
+            console.log(`\n-------------------------- ${gameState[gameState.turn].name}'s TURN-------------------------- \n`)
 
             console.log("DISCARD")
             console.log(gameState.discard, "\n")
@@ -56,7 +56,7 @@ const startApp = async () => {
             console.log(gameState[gameState.turn].expeditions, "\n")
             console.log("HAND")
             console.log(ui.printHand(gameState[gameState.turn].hand).toString(), "\n");
-
+            console.log("Deck Size: ", gameState.deck.length);
             // Ask the user to play/discard a card from hand
             while (true) {
                 console.log("input: (play/discard) (handIndex)");
@@ -90,7 +90,7 @@ const startApp = async () => {
             // go next
             game.turn(gameState)
 
-            if (endgame(gameState)) {
+            if (game.endgame(gameState)) {
                 totalScores.player1 += game.score(gameState).player1;
                 totalScores.player2 += game.score(gameState).player2;
                 console.log(`Total scores after Game ${gameCount}:`);
@@ -103,13 +103,13 @@ const startApp = async () => {
 
     if (totalScores.player1 > totalScores.player2) {
         console.log(`\n${gameState.player1.name} wins! Congratulations!`);
-      } 
-      else if (totalScores.player1 < totalScores.player2) {
+    } 
+    else if (totalScores.player1 < totalScores.player2) {
         console.log(`\n${gameState.player2.name} wins! Congratulations!`);
-      } 
-      else {
+    } 
+    else {
         console.log(`\nIt's a tie! Both players have the same combined score.`);
-      }
+    }
 };
 
 startApp().catch(console.error);
