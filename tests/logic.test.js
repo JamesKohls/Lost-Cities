@@ -9,15 +9,15 @@ function unshuffledGameInit(){
     deal(game)
     return game
     // - What the hands looks like in unshuffled Input
-    //-P1- -P2- 
-    // R0   R0
-    // R0   R2
-    // R3   R4
-    // R5   R6
-    // R7   R8
-    // R9   R10
-    // G0   G0
-    // G0   G2
+    //  -P1- -P2- 
+    // 0 R0   R0
+    // 1 R0   R2
+    // 2 R3   R4
+    // 3 R5   R6
+    // 4 R7   R8
+    // 5 R9   R10
+    // 6 G0   G0
+    // 7 G0   G2
 }
 
 test('shuffles fifteen items', () => {
@@ -125,6 +125,17 @@ test('take a card from empty discard', () => {
     expect(() => {
         draw(game, "discard red")
     }).toThrow('Invalid Move: pile is empty');
+});
+
+test('play card after incorrect move', () => {
+    let game = unshuffledGameInit();
+    play(game, "play 4");
+    expect(() => {
+        play(game, "play 3");
+    }).toThrow('Invalid Move: cannot place card of lower value');
+    expect(game.player1.hand[0]).toEqual({color: 'red', value: 0 });
+    expect(game.player1.hand[3]).toEqual({color: 'red', value: 5 });
+    expect(game.player1.hand[6]).toEqual({color: 'green', value: 0 });
 });
 
 test('next turn', () => { 
