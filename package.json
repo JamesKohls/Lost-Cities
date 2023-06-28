@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest"
   },
-  "author": "James Kohls & Tzu Chieh Wei", 
+  "author": "James Kohls & Tzu Chieh Wei",
   "license": "MIT",
   "devDependencies": {
     "jest": "^29.5.0"
@@ -14,7 +14,6 @@
   "dependencies": {
     "@colors/colors": "^1.5.0",
     "@tensorflow/tfjs": "^4.8.0",
-    "chalk": "^4.1.2",
     "cli-table3": "^0.6.3"
   }
 }
