@@ -7,9 +7,9 @@ Lost Cities is a Javascript recreation of the popular card game "Lost Cities"
 1. Pull or download this repo
 2. ensure node is installed
 3. add the following packages
-3a. "@colors/colors": "^1.5.0",
-3b. "@tensorflow/tfjs": "^4.8.0",
-3c. "cli-table3": "^0.6.3"
+- "@colors/colors": "^1.5.0",
+- "@tensorflow/tfjs": "^4.8.0",
+- "cli-table3": "^0.6.3"
   
 
 ## Usage
