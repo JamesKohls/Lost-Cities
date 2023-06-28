@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest"
   },
-  "author": "James Kohls",
+  "author": "James Kohls & Tzu Chieh Wei", 
   "license": "MIT",
   "devDependencies": {
     "jest": "^29.5.0"
