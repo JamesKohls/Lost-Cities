@@ -56,30 +56,51 @@ module.exports.makeDecision = function makeDecision(gameObj) {
   
   const legalActions = [];
 
+  if (playAction > discardAction) {
+    let minCardValue = Infinity;
+    let mostCardsColor = null;
+
+    // Find the card with the lowest value and the color with the most cards in hand
+    aiHand.forEach((card, index) => {
+      if (card.value < minCardValue) {
+        minCardValue = card.value;
+        mostCardsColor = card.color;
+      }
+    });
+
+    // Play the card with the lowest value and the color with the most cards
+    aiHand.forEach((card, index) => {
+      if (card.value === minCardValue && card.color === mostCardsColor) {
+        legalActions.push(`play ${index}`);
+      }
+    });
+  }
+
+  if (discardAction > playAction) {
+    let minCardValue = Infinity;
+    let leastCardsColor = null;
+
+    // Find the card with the lowest value and the color with the least cards in hand
+    aiHand.forEach((card, index) => {
+      if (card.value < minCardValue) {
+        minCardValue = card.value;
+        leastCardsColor = card.color;
+      }
+    });
+
+    // Discard the card with the lowest value and the color with the least cards
+    aiHand.forEach((card, index) => {
+      if (card.value === minCardValue && card.color === leastCardsColor) {
+        legalActions.push(`discard ${index}`);
+      }
+    });
+  }
   for (let i = 0; i < aiHand.length; i++) {
     if (playAction >= 0 && playAction <= 1) {
       legalActions.push(`play ${i}`);
     }
   }
 
-  if (discardAction >= 0 && discardAction <= 1) {
-    legalActions.push(`discard ${Math.floor(Math.random() * aiHand.length)}`);
-  }
-
-  if (drawAction >= 0 && drawAction <= 1) {
-    legalActions.push('draw');
-  }
-
-  if (discardColorAction >= 0 && discardColorAction <= 1) {
-    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
-    legalActions.push(`discard ${colors[Math.floor(Math.random() * colors.length)]}`);
-  }
-
-  const randomPlayAction = legalActions.find(action => action.startsWith('play'));
-  const randomDiscardAction = legalActions.find(action => action.startsWith('discard'));
-
-  const randomActions = [randomPlayAction, randomDiscardAction];
-
-  return randomActions;
+  return legalActions;
 };
 
