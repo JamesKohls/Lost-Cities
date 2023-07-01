@@ -1,4 +1,3 @@
-// aiLogic.js
 const tf = require('@tensorflow/tfjs');
 const { createGamestate, shuffle, deal, play, draw, turn, score, endgame } = require('./gameLogic.js');
 
@@ -15,20 +14,22 @@ module.exports.makeDecision = function makeDecision(gameObj) {
   const aiHand = gameObj.player2.hand;
   const player1Expeditions = gameObj.player1.expeditions;
   const player2Expeditions = gameObj.player2.expeditions;
-  const discardPile = gameObj.discard;
+  const discardPile = Object.values(gameObj.discard).flat();
 
   const player1ExpeditionsFlat = [];
-  for (const expedition of player1Expeditions) {
-    if (expedition.length > 0) {
+  for (const color in player1Expeditions) {
+    if (player1Expeditions.hasOwnProperty(color)) {
+      const expedition = player1Expeditions[color];
       for (const card of expedition) {
         player1ExpeditionsFlat.push({ color: card.color, value: card.value });
       }
     }
   }
-
+  
   const player2ExpeditionsFlat = [];
-  for (const expedition of player2Expeditions) {
-    if (expedition.length > 0) {
+  for (const color in player2Expeditions) {
+    if (player2Expeditions.hasOwnProperty(color)) {
+      const expedition = player2Expeditions[color];
       for (const card of expedition) {
         player2ExpeditionsFlat.push({ color: card.color, value: card.value });
       }
@@ -43,15 +44,16 @@ module.exports.makeDecision = function makeDecision(gameObj) {
     ...discardPile,
   ];
 
-
   const inputSize = inputData.length;
   const outputSize = 4;
 
   const model = createModel(inputSize, outputSize);
   const inputTensor = tf.tensor2d([inputData], [1, inputSize]);
-  const action = model.predict(inputTensor).dataSync();
+  const preprocessedInputTensor = tf.div(tf.sub(inputTensor, 0.5), 0.5);
+  const action = model.predict(preprocessedInputTensor).dataSync();
   const [playAction, discardAction, drawAction, discardColorAction] = action;
-
+  console.log(action);
+  
   const legalActions = [];
 
   for (let i = 0; i < aiHand.length; i++) {
@@ -73,10 +75,11 @@ module.exports.makeDecision = function makeDecision(gameObj) {
     legalActions.push(`discard ${colors[Math.floor(Math.random() * colors.length)]}`);
   }
 
-  const randomActions = [
-    legalActions[Math.floor(Math.random() * legalActions.length)],
-    legalActions[Math.floor(Math.random() * legalActions.length)],
-  ];
+  const randomPlayAction = legalActions.find(action => action.startsWith('play'));
+  const randomDiscardAction = legalActions.find(action => action.startsWith('discard'));
+
+  const randomActions = [randomPlayAction, randomDiscardAction];
 
   return randomActions;
 };
+

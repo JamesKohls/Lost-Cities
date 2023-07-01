@@ -72,14 +72,8 @@ const startApp = async () => {
                 else if (gameState[gameState.turn].name == "AI") {
                     let action = ai.makeDecision(gameState);
                     console.log(action);
-                    let playString = action[0];
-                    try {
-                        game.play(gameState, playString);
-                        break;
-                    }
-                    catch (error) {
-                        console.log(colors.red(error.message));
-                    }
+                    //let playString = action[0];
+                    break;
                 }
 
             }
@@ -106,14 +100,8 @@ const startApp = async () => {
                 else if (gameState[gameState.turn].name == "AI") {
                     let action = ai.makeDecision(gameState);
                     console.log(action);
-                    let drawString = action[1];
-                    try {
-                        game.play(gameState, drawString);
-                        break;
-                    }
-                    catch (error) {
-                        console.log(colors.red(error.message));
-                    }
+                    //let drawString = action[1];
+                    break;
                 }
             }
 
