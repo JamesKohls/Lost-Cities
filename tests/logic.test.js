@@ -247,5 +247,23 @@ test('Should print out the victory message when game ends', () => {
         blue: [],
         yellow: [],
     }
-    expect(game.discard.red.length).toBe(0);
+    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+    const discardPileLengths = colors.map(color => game.discard[color].length);
+    const isAllColorsEmpty = discardPileLengths.every(length => length == 0);
+    expect(isAllColorsEmpty).toBe(true);
+});
+
+test('checks the length of discard pile', () => {
+    let game = unshuffledGameInit();
+    game.discard= { // object where each key is a color and each value is an array of cards
+        red: [],
+        green: [],
+        white: [{color: 'white', value: 4 }],
+        blue: [],
+        yellow: [],
+    }
+    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+    const discardPileLengths = colors.map(color => game.discard[color].length);
+    const isAllColorsEmpty = discardPileLengths.every(length => length == 0);
+    expect(isAllColorsEmpty).toBe(false);
 });
