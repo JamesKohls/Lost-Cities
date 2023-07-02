@@ -101,6 +101,15 @@ module.exports.makeDecision = function makeDecision(gameObj) {
     }
   }
 
+  if (discardPile.length == 0 || drawAction > discardColorAction) {
+    legalActions.push('draw');
+  }
+
+  if (discardPile.length != 0 && discardColorAction > drawAction) {
+    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+    legalActions.push(`discard ${colors[Math.floor(Math.random() * colors.length)]}`);
+  }
+
   return legalActions;
 };
 
