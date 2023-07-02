@@ -14,8 +14,16 @@ Lost Cities is a Javascript recreation of the popular card game "Lost Cities"
 
 ## Usage
 
-- node main.js
-- npm test
+Interacting with logic components
+
+- Run PvP through console: node main.js
+- Run PvAi through console: node aiMain.js
+- testing: npm test
+
+Interacting with UI components
+
+- cd lost-cities-react
+- npm start
 
 ## Contributing
 
