@@ -9,7 +9,7 @@ function createModel(inputSize, outputSize) {
   return model;
 }
 
-module.exports.makeDecision = function makeDecision(gameObj) {
+module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
   const deckSize = gameObj.deck.length;
   const aiHand = gameObj.player2.hand;
   const player1Expeditions = gameObj.player1.expeditions;
@@ -52,9 +52,8 @@ module.exports.makeDecision = function makeDecision(gameObj) {
   const preprocessedInputTensor = tf.div(tf.sub(inputTensor, 0.5), 0.5);
   const action = model.predict(preprocessedInputTensor).dataSync();
   const [playAction, discardAction, drawAction, discardColorAction] = action;
-  console.log(action);
   
-  const legalActions = [];
+  let legalActions = [];
 
   if (playAction > discardAction) {
     let minCardValue = Infinity;
@@ -100,6 +99,55 @@ module.exports.makeDecision = function makeDecision(gameObj) {
       legalActions.push(`play ${i}`);
     }
   }
+
+  return legalActions;
+};
+
+module.exports.makeSecondDecision = function makeSecondDecision(gameObj) {
+  const deckSize = gameObj.deck.length;
+  const aiHand = gameObj.player2.hand;
+  const player1Expeditions = gameObj.player1.expeditions;
+  const player2Expeditions = gameObj.player2.expeditions;
+  const discardPile = Object.values(gameObj.discard).flat();
+
+  const player1ExpeditionsFlat = [];
+  for (const color in player1Expeditions) {
+    if (player1Expeditions.hasOwnProperty(color)) {
+      const expedition = player1Expeditions[color];
+      for (const card of expedition) {
+        player1ExpeditionsFlat.push({ color: card.color, value: card.value });
+      }
+    }
+  }
+  
+  const player2ExpeditionsFlat = [];
+  for (const color in player2Expeditions) {
+    if (player2Expeditions.hasOwnProperty(color)) {
+      const expedition = player2Expeditions[color];
+      for (const card of expedition) {
+        player2ExpeditionsFlat.push({ color: card.color, value: card.value });
+      }
+    }
+  }
+
+  const inputData = [
+    deckSize,
+    ...aiHand,
+    ...player1ExpeditionsFlat,
+    ...player2ExpeditionsFlat,
+    ...discardPile,
+  ];
+
+  const inputSize = inputData.length;
+  const outputSize = 4;
+
+  const model = createModel(inputSize, outputSize);
+  const inputTensor = tf.tensor2d([inputData], [1, inputSize]);
+  const preprocessedInputTensor = tf.div(tf.sub(inputTensor, 0.5), 0.5);
+  const action = model.predict(preprocessedInputTensor).dataSync();
+  const [playAction, discardAction, drawAction, discardColorAction] = action;
+  
+  let legalActions = [];
 
   if (discardPile.length == 0 || drawAction > discardColorAction) {
     legalActions.push('draw');
