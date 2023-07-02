@@ -25,11 +25,12 @@ const readLineAsync = msg => {
 
 const startApp = async () => {
     let totalScores = { player1: 0, player2: 0 };
+    let gameState;
 
     for (let gameCount = 1; gameCount <= 1; gameCount++) {
         console.log(`Game ${gameCount}:`);
         // shuffe deck
-        let gameState = game.createGamestate()
+        gameState = game.createGamestate()
         gameState.deck = game.shuffle(deck)
         // assign name(s)
         let p1 = await readLineAsync('Please enter your name (default player1): ');
@@ -73,9 +74,13 @@ const startApp = async () => {
                     let action = ai.makeFirstDecision(gameState);
                     let playString = action[0];
                     console.log(playString);
-                    game.play(gameState, playString);
-                    break;
-
+                    try {
+                        game.play(gameState, playString);
+                        break;
+                    }
+                    catch (error) {
+                        console.log(colors.red(error.message));
+                    }
                 }
 
             }
@@ -103,8 +108,13 @@ const startApp = async () => {
                     let action = ai.makeSecondDecision(gameState);
                     let drawString = action[0];
                     console.log(drawString);
-                    game.draw(gameState, drawString);
-                    break;
+                    try {
+                        game.draw(gameState, drawString);
+                        break;
+                    }
+                    catch (error) {
+                        console.log(colors.red(error.message));
+                    }
                 }
             }
 

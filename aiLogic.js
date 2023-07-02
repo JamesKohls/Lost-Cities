@@ -1,4 +1,5 @@
 const tf = require('@tensorflow/tfjs');
+var colors = require('@colors/colors');
 const { createGamestate, shuffle, deal, play, draw, turn, score, endgame } = require('./gameLogic.js');
 
 function createModel(inputSize, outputSize) {
@@ -45,13 +46,13 @@ module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
   ];
 
   const inputSize = inputData.length;
-  const outputSize = 4;
+  const outputSize = 2;
 
   const model = createModel(inputSize, outputSize);
   const inputTensor = tf.tensor2d([inputData], [1, inputSize]);
   const preprocessedInputTensor = tf.div(tf.sub(inputTensor, 0.5), 0.5);
   const action = model.predict(preprocessedInputTensor).dataSync();
-  const [playAction, discardAction, drawAction, discardColorAction] = action;
+  const [playAction, discardAction] = action;
   
   let legalActions = [];
 
@@ -139,21 +140,25 @@ module.exports.makeSecondDecision = function makeSecondDecision(gameObj) {
   ];
 
   const inputSize = inputData.length;
-  const outputSize = 4;
+  const outputSize = 2;
 
   const model = createModel(inputSize, outputSize);
   const inputTensor = tf.tensor2d([inputData], [1, inputSize]);
   const preprocessedInputTensor = tf.div(tf.sub(inputTensor, 0.5), 0.5);
   const action = model.predict(preprocessedInputTensor).dataSync();
-  const [playAction, discardAction, drawAction, discardColorAction] = action;
+  const [drawAction, discardColorAction] = action;
   
   let legalActions = [];
 
-  if (discardPile.length == 0 || drawAction > discardColorAction) {
+  const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+  const discardPileLengths = colors.map(color => gameObj.discard[color].length);
+  const isAllColorsEmpty = discardPileLengths.every(length => length == 0);
+
+  if (isAllColorsEmpty || drawAction > discardColorAction) {
     legalActions.push('draw');
   }
 
-  if (discardPile.length != 0 && discardColorAction > drawAction) {
+  if (!isAllColorsEmpty && discardColorAction > drawAction) {
     const colors = ['red', 'green', 'white', 'blue', 'yellow'];
     legalActions.push(`discard ${colors[Math.floor(Math.random() * colors.length)]}`);
   }

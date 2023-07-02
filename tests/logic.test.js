@@ -238,3 +238,14 @@ test('Should print out the victory message when game ends', () => {
     expect(console.log).toHaveBeenCalledWith(`\n${game.player1.name} wins! Congratulations!`);
   });
   
+  test('checks the length of discard pile', () => {
+    let game = unshuffledGameInit();
+    game.discard= { // object where each key is a color and each value is an array of cards
+        red: [],
+        green: [],
+        white: [],
+        blue: [],
+        yellow: [],
+    }
+    expect(game.discard.red.length).toBe(0);
+});
