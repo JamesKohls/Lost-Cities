@@ -1,14 +1,81 @@
 const tf = require('@tensorflow/tfjs');
 var colors = require('@colors/colors');
 const { createGamestate, shuffle, deal, play, draw, turn, score, endgame } = require('./gameLogic.js');
+const _ = require('lodash');
 
-function createModel(inputSize, outputSize) {
-  const model = tf.sequential();
-  model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [inputSize] }));
-  model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
-  model.add(tf.layers.dense({ units: outputSize, activation: 'linear' }));
-  return model;
+const learningRate = 0.001;
+const discountFactor = 0.99;
+const epsilonDecay = 0.9995;
+const minEpsilon = 0.1;
+
+class DQNAgent {
+  constructor(inputSize, outputSize) {
+    this.model = this.createModel(inputSize, outputSize);
+    this.targetModel = this.createModel(inputSize, outputSize);
+    this.updateTargetModel();
+    this.memory = [];
+    this.epsilon = 1.0;
+    this.inputSize = inputSize;
+    this.outputSize = outputSize;
+  }
+
+  createModel(inputSize, outputSize) {
+    const model = tf.sequential();
+    model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [inputSize] }));
+    model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
+    model.add(tf.layers.dense({ units: outputSize, activation: 'linear' }));
+    model.compile({ loss: 'meanSquaredError', optimizer: tf.train.adam(learningRate) });
+    return model;
+  }
 }
+
+module.exports = DQNAgent;
+
+function playReward(legalActions) {
+  let reward = 0;
+  // let action = legalActions.split(" ");
+  // let index = parseInt(action[1]);
+  // if (action[0] == "play" && !isNaN(index)) {}
+  if (legalActions.length == 0) {
+    return reward;
+  }
+  const input = legalActions[0];
+  legalActions.shift(); // Remove the first element from the array
+
+  try {
+    game.play(gameObj, input);
+    // If no error was thrown, increment the reward by 10
+    reward += 10;
+  } catch (error) {
+    // If an error was thrown, decrement the reward by 10
+    reward -= 10;
+  }
+  return reward;
+}
+
+function drawReward(legalActions) {
+  let reward = 0;
+  // let action = legalActions.split(" ");
+  // let index = parseInt(action[1]);
+  // if (action[0] == "play" && !isNaN(index)) {}
+  if (legalActions.length == 0) {
+    return reward;
+  }
+  const input = legalActions[0];
+  legalActions.shift(); // Remove the first element from the array
+
+  try {
+    game.draw(gameObj, input);
+    // If no error was thrown, increment the reward by 10
+    reward += 10;
+  } catch (error) {
+    // If an error was thrown, decrement the reward by 10
+    reward -= 10;
+  }
+  return reward;
+}
+
+
 
 module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
   const deckSize = gameObj.deck.length;
@@ -54,7 +121,7 @@ module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
   const action = model.predict(preprocessedInputTensor).dataSync();
   const [playAction, discardAction] = action;
   
-  let legalActions = [];
+  let legalPlayActions = [];
 
   if (playAction > discardAction) {
     let minCardValue = Infinity;
@@ -71,7 +138,7 @@ module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
     // Play the card with the lowest value and the color with the most cards
     aiHand.forEach((card, index) => {
       if (card.value === minCardValue && card.color === mostCardsColor) {
-        legalActions.push(`play ${index}`);
+        legalPlayActions.push(`play ${index}`);
       }
     });
   }
@@ -91,17 +158,17 @@ module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
     // Discard the card with the lowest value and the color with the least cards
     aiHand.forEach((card, index) => {
       if (card.value === minCardValue && card.color === leastCardsColor) {
-        legalActions.push(`discard ${index}`);
+        legalPlayActions.push(`discard ${index}`);
       }
     });
   }
   for (let i = 0; i < aiHand.length; i++) {
     if (playAction >= 0 && playAction <= 1) {
-      legalActions.push(`play ${i}`);
+      legalPlayActions.push(`play ${i}`);
     }
   }
 
-  return legalActions;
+  return legalPlayActions;
 };
 
 module.exports.makeSecondDecision = function makeSecondDecision(gameObj) {
