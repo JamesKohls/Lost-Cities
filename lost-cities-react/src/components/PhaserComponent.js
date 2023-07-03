@@ -24,22 +24,22 @@ const PhaserComponent = () => {
     
         game = new Phaser.Game(config);
         // names of all the cards in the game
-        let cardFiles = ['blue0.png', 'blue1.png', /*...*/ 'red9.png'];
+        let cardFiles = ['blue0.png', 'blue1.png', 'blue2.png'];
         function preload() {
-            // this.load.setBaseURL('https://labs.phaser.io');
-            // this.load.image('sky', 'assets/skies/space3.png');
-            // this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-            // this.load.image('red', 'assets/particles/red.png');
-            this.load.image('card1', 'cards/red8.png');
+            cardFiles.forEach((cardFile) => {
+                this.load.image(cardFile.split('.')[0], 'cards/' + cardFile);
+            });
         }
     
         function create() {
             //this.add.image(400, 300, 'sky');
-            const logo = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, 'card1');
+            const logo = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, 'blue2');
             logo.setVelocity(100, 200);
             logo.setBounce(1, 1);
             logo.setCollideWorldBounds(true);
             logo.setScale(0.1, 0.1)
+
+
         }
     
         // Function to handle window resize
