@@ -30,9 +30,15 @@ class DQNAgent {
   }
 
   updateTargetModel() {
-    this.targetModel.setWeights(this.model.getWeights);
+    const sourceWeights = this.model.getWeights();
+    const targetWeights = this.targetModel.getWeights();
+    for (let i = 0; i < sourceWeights.length; i++) {
+      targetWeights[i].assign(sourceWeights[i]);
+    }
+    this.targetModel.setWeights(targetWeights);
   }
 
+  // Epsilon-greedy exploration
   selectAction(state) {
     if (Math.random() < this.epsilon) {
       // Exploration: choose a random action
@@ -50,6 +56,8 @@ class DQNAgent {
     const preprocessedInputTensor = tf.div(tf.sub(inputTensor, 0.5), 0.5);
     return this.model.predict(preprocessedInputTensor);
   }
+
+
 
 }
 
