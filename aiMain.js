@@ -71,16 +71,10 @@ const startApp = async () => {
                 }
 
                 else if (gameState[gameState.turn].name == "AI") {
-                    let action = ai.makeFirstDecision(gameState);
-                    let playString = action[0];
-                    console.log(playString);
-                    try {
-                        game.play(gameState, playString);
-                        break;
-                    }
-                    catch (error) {
-                        console.log(colors.red(error.message));
-                    }
+                    let playAction = ai.makeFirstDecision(gameState);
+                    let playString = playAction[0];
+                    console.log(playAction);
+                    break;
                 }
 
             }
@@ -105,16 +99,10 @@ const startApp = async () => {
                 }
 
                 else if (gameState[gameState.turn].name == "AI") {
-                    let action = ai.makeSecondDecision(gameState);
-                    let drawString = action[0];
-                    console.log(drawString);
-                    try {
-                        game.draw(gameState, drawString);
-                        break;
-                    }
-                    catch (error) {
-                        console.log(colors.red(error.message));
-                    }
+                    let drawAction = ai.makeSecondDecision(gameState);
+                    let drawString = drawAction[0];
+                    console.log(drawAction);
+                    break;
                 }
             }
 

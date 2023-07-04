@@ -37,8 +37,7 @@ Please make sure to update tests as appropriate.
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## To-Do Lists
-1. Tests - Create Unit tests
-2. AILogic
+1. AIModel
     - Initialize game state, updates it after every single move/action (both players)
     - Initialize Q value, updates it after every single move/action (AI only)
     - Come up with all possible states that AI may encounter
@@ -48,3 +47,4 @@ Please make sure to update tests as appropriate.
         - First layer/ Input layer: Uses for state obervations
         - Second Layer and Third Layer: Based on the policy and Training Loop
         - Fourth Layer / Output Layer: Q values table
+2. Convert actions into valid strings based on the Q values and action index
