@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Phaser from 'phaser';
 
 const PhaserComponent = () => {
@@ -12,7 +12,7 @@ const PhaserComponent = () => {
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 200 }
+                    gravity: { y: 0 }
                 }
             },
             scene: {
@@ -21,30 +21,53 @@ const PhaserComponent = () => {
             },
             backgroundColor: '#ffffff', // white background
         };
-    
         game = new Phaser.Game(config);
-        // names of all the cards in the game
-        let cardFiles = ['blue0.png', 'blue1.png', 'blue2.png'];
+
+
+        let cardFiles = [
+            'blue0', 'blue2', 'blue3', 'blue4', 'blue5', 'blue6', 'blue7', 'blue8', 'blue9', 'blue10',
+            'green0', 'green2', 'green3', 'green4', 'green5', 'green6', 'green7', 'green8', 'green9', 'green10',
+            'red0', 'red2', 'red3', 'red4', 'red5', 'red6', 'red7', 'red8', 'red9', 'red10'
+        ];
+
         function preload() {
-            cardFiles.forEach((cardFile) => {
-                this.load.image(cardFile.split('.')[0], 'cards/' + cardFile);
+            cardFiles.forEach((card) => {
+                this.load.image(card, 'cards/' + card + '.png');
             });
-        }
+        }        
     
         function create() {
-            //this.add.image(400, 300, 'sky');
-            const logo = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, 'blue2');
-            logo.setVelocity(100, 200);
-            logo.setBounce(1, 1);
-            logo.setCollideWorldBounds(true);
-            logo.setScale(0.1, 0.1)
 
+            cardFiles.forEach((cardFile) => {
+                const card = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, cardFile);
+                card.setCollideWorldBounds(true);
+                card.setScale(0.1, 0.1)
+                card.setInteractive({ draggable: true });
+
+                card.on('dragstart', function (pointer) {
+                    this.setDepth(1);
+                });
+
+                card.on('drag', function (pointer, dragX, dragY) {
+                    this.x = dragX;
+                    this.y = dragY;
+                });
+
+                card.on('dragend', function (pointer) {
+                    this.setDepth(0);
+                });
+            });
 
         }
     
         // Function to handle window resize
         function resize() {
             game.scale.resize(window.innerWidth, window.innerHeight);
+            game.scene.scenes.forEach(scene => {
+                if (scene.cameras.main) {
+                    scene.physics.world.setBounds(0, 0, scene.cameras.main.width, scene.cameras.main.height);
+                }
+            });
         }
     
         // Add event listener for window resize
