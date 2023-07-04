@@ -27,7 +27,9 @@ const PhaserComponent = () => {
         let cardFiles = [
             'blue0', 'blue2', 'blue3', 'blue4', 'blue5', 'blue6', 'blue7', 'blue8', 'blue9', 'blue10',
             'green0', 'green2', 'green3', 'green4', 'green5', 'green6', 'green7', 'green8', 'green9', 'green10',
-            'red0', 'red2', 'red3', 'red4', 'red5', 'red6', 'red7', 'red8', 'red9', 'red10'
+            'red0', 'red2', 'red3', 'red4', 'red5', 'red6', 'red7', 'red8', 'red9', 'red10',
+            'white0', 'white2', 'white3', 'white4', 'white5', 'white6', 'white7', 'white8', 'white9', 'white10',
+            'yellow0', 'yellow2', 'yellow3', 'yellow4', 'yellow5', 'yellow6', 'yellow7', 'yellow8', 'yellow9', 'yellow10',
         ];
 
         function preload() {
