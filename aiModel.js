@@ -57,7 +57,20 @@ class DQNAgent {
     return this.model.predict(preprocessedInputTensor);
   }
 
+  memorize(state, action, reward, nextState, done) {
+    this.memory.push({ state, action, reward, nextState, done });
+    if (this.memory.length > 50000) {
+      this.memory.shift();
+    }
+  }
 
+
+
+  updateEpsilon() {
+    if (this.epsilon > minEpsilon) {
+      this.epsilon *= epsilonDecay;
+    }
+  }
 
 }
 
