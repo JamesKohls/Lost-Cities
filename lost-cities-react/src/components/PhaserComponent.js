@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import Phaser from 'phaser';
+
 const logic = require('../logic/gameLogic.js');
+const cardData = require('../logic/cards.json');
 
 const PhaserComponent = () => {
     useEffect(() => {
         let game;
-        let gameState = logic.createGamestate()
-        console.log(gameState)
+        let gameObj = logic.createGamestate()
         const config = {
             type: Phaser.AUTO,
             parent: 'phaser-example',
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: 1600,
+            height: 1000,
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -20,9 +21,14 @@ const PhaserComponent = () => {
             },
             scene: {
                 preload: preload,
+                initGameLogic: initGameLogic,
                 create: create,
             },
-            backgroundColor: '#ffffff', // white background
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+            },
+            backgroundColor: '#f0f0f0', // white background
         };
         game = new Phaser.Game(config);
 
@@ -39,50 +45,60 @@ const PhaserComponent = () => {
             cardFiles.forEach((card) => {
                 this.load.image(card, 'cards/' + card + '.png');
             });
-
         }        
+
+        function initGameLogic(){
+            gameObj.deck = game.shuffle(cardData)
+        }
     
         function create() {
-
-            // cardFiles.forEach((cardFile) => {
-            //     const card = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, cardFile);
-            //     card.setCollideWorldBounds(true);
-            //     card.setScale(0.1, 0.1)
-            //     card.setInteractive({ draggable: true });
-
-            //     card.on('dragstart', function (pointer) {
-            //         this.setDepth(1);
-            //     });
-
-            //     card.on('drag', function (pointer, dragX, dragY) {
-            //         this.x = dragX;
-            //         this.y = dragY;
-            //     });
-
-            //     card.on('dragend', function (pointer) {
-            //         this.setDepth(0);
-            //     });
-            // });
-
-
-
-        }
-    
-        // Function to handle window resize
-        function resize() {
-            game.scale.resize(window.innerWidth, window.innerHeight);
-            game.scene.scenes.forEach(scene => {
-                if (scene.cameras.main) {
-                    scene.physics.world.setBounds(0, 0, scene.cameras.main.width, scene.cameras.main.height);
-                }
+            cardFiles.forEach((cardFile) => {
+                const card = this.physics.add.image(400, 200, cardFile);
+                card.setCollideWorldBounds(true);
+        
+                let scaleX = this.game.scale.width / card.width / 4
+                let scaleY = this.game.scale.height / card.height / 4
+                let scale = Math.min(scaleX, scaleY);
+                card.setScale(scale);
+        
+                card.setInteractive({ draggable: true });
+        
+                card.on('dragstart', function (pointer) {
+                    this.setDepth(1);
+                });
+        
+                card.on('drag', function (pointer, dragX, dragY) {
+                    this.x = dragX;
+                    this.y = dragY;
+                });
+        
+                card.on('dragend', function (pointer) {
+                    this.setDepth(0);
+                });
             });
         }
+
+        // Function to handle window resize
+        function resize() {
+            //console.log("resize")
+            game.scale.refresh();
+        }
     
-        // Add event listener for window resize
+        // Add event listeners
         window.addEventListener('resize', resize);
+        window.addEventListener('fullscreenchange', resize);
+        window.addEventListener('mozfullscreenchange', resize); // Firefox
+        window.addEventListener('webkitfullscreenchange', resize); // Chrome, Safari and Opera
+        window.addEventListener('msfullscreenchange', resize); // IE
     
-        // Remove event listener when the component is unmounted
-        return () => window.removeEventListener('resize', resize);
+        // Remove event listeners when the component is unmounted
+        return () => {
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('fullscreenchange', resize);
+            window.removeEventListener('mozfullscreenchange', resize);
+            window.removeEventListener('webkitfullscreenchange', resize);
+            window.removeEventListener('msfullscreenchange', resize);
+        };
     }, []);    
 };
 
