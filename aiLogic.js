@@ -1,11 +1,11 @@
 // aiLogic.js
 const tf = require('@tensorflow/tfjs');
 var colors = require('@colors/colors');
-const { createGamestate, shuffle, deal, play, draw, turn, score, endgame } = require('./gameLogic.js');
+const game = require('./gameLogic.js');
 const _ = require('lodash');
 const DQNAgent = require('./aiModel.js');
 
-module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
+function makeFirstDecision(gameObj) {
   const state1 = getState(gameObj);
   const inputSize = getInputSize(gameObj);
   const outputSize = 8;
@@ -13,18 +13,24 @@ module.exports.makeFirstDecision = function makeFirstDecision(gameObj) {
   const action1 = agent1.selectAction(state1);
   const predict1 = agent1.predict(state1);
   const qValues1 = predict1.dataSync();
-  return {action1, qValues1};
+  const qValue1 = qValues1[action1];
+  const playString = getPlayString(qValue1, action1);
+  // return {action1, qValues1, qValue1, playString};
+  return playString;
 };
 
-module.exports.makeSecondDecision = function makeSecondDecision(gameObj) {
+function makeSecondDecision(gameObj) {
   const state2 = getState(gameObj);
   const inputSize = getInputSize(gameObj);
-  const outputSize = 2;
+  const outputSize = 6;
   const agent2 = new DQNAgent(inputSize, outputSize);
   const action2 = agent2.selectAction(state2);
   const predict2 = agent2.predict(state2);
   const qValues2 = predict2.dataSync();
-  return {action2, qValues2};
+  const qValue2 = qValues2[action2];
+  const drawString = getDrawString(gameObj, qValue2);
+ // return {action2, qValues2, drawString};
+ return drawString;
 };
 
 function getState(gameObj) {
@@ -73,14 +79,44 @@ function getInputSize(gameObj) {
   return inputSize;
 }
 
-function getPlayString(index) {
-  const playString = index;
-
-  return playString;
+function getPlayString(qValue, index) {
+  if (qValue >= 0) {
+    const playString = "play " + index.toString();
+    return playString;
+  }
+  else {
+    const playString = "discard " + index.toString();
+    return playString;
+  }
 }
 
-function getDrawString(index) {
-  const drawString = index;
+function calculateReward(gameState) {
+  // Implement the logic to calculate the reward based on the game state
 
-  return drawString;
+  // Example: Calculate the difference in scores between the players
+  const player1Score = game.score(gameState).player1;
+  const player2Score = game.score(gameState).player2;
+  const reward = player1Score - player2Score;
+
+  // Return the reward
+  return reward;
 }
+
+function getDrawString(gameObj, qValue) {
+  const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+  const discardPileLengths = colors.map(color => gameObj.discard[color].length);
+  const isAllColorsEmpty = discardPileLengths.every(length => length == 0);
+  if (isAllColorsEmpty || qValue < 0) {
+    const drawString = "draw"
+    return drawString
+  }
+  else {
+    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+    const drawString = "discard " + colors[Math.floor(Math.random() * colors.length)];
+    return drawString;
+  }
+  
+}
+
+// Export the getState function
+module.exports = {getState, calculateReward, makeFirstDecision, makeSecondDecision, getInputSize, getState};
