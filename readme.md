@@ -49,3 +49,5 @@ Please make sure to update tests as appropriate.
         - Fourth Layer / Output Layer: Q values table
 2. Convert actions into valid strings based on the Q values and action index
 3. Make sure reward function only return positive rewards for favorable moves and vice versa
+    - Bug: Cause the game call play/draw function twice there will be an extra card missing after each turn
+4. Perhaps train the AI before the game
