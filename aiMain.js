@@ -6,6 +6,7 @@ const readline = require('readline');
 let deck = require('./cards.json');
 const Table = require('cli-table3');
 var colors = require('@colors/colors');
+const DQNAgent = require('./aiModel.js');
 
 console.log("Welcome to Lost Cities");
 
@@ -44,6 +45,9 @@ const startApp = async () => {
         // deal the cards
         game.deal(gameState)
 
+        const agent1 = new DQNAgent(ai.getInputSize(gameState), 8);
+        const agent2 = new DQNAgent(ai.getInputSize(gameState), 6);
+
         while (!game.endgame(gameState)) {
             //console.log(ui.printDiscard(gameState.discard))
             //console.log(ui.printBoard(gameState).toString())
@@ -71,10 +75,16 @@ const startApp = async () => {
                 }
 
                 else if (gameState[gameState.turn].name == "AI") {
-                    let playAction = ai.makeFirstDecision(gameState);
-                    let playString = playAction[0];
-                    console.log(playAction);
-                    break;
+                    let playString = ai.makeFirstDecision(gameState);
+                    console.log(playString);
+                    try {
+                        game.play(gameState, playString);
+
+                        break;
+                    }
+                    catch (error) {
+                        console.log(colors.red(error.message));
+                    }
                 }
 
             }
@@ -99,13 +109,18 @@ const startApp = async () => {
                 }
 
                 else if (gameState[gameState.turn].name == "AI") {
-                    let drawAction = ai.makeSecondDecision(gameState);
-                    let drawString = drawAction[0];
-                    console.log(drawAction);
-                    break;
+                    let drawString = ai.makeSecondDecision(gameState);
+                    console.log(drawString);
+                    try {
+                        game.draw(gameState, drawString);
+                        break;
+                    }
+                    catch (error) {
+                        console.log(colors.red(error.message));
+                    }
                 }
             }
-
+            
             // go next
             game.turn(gameState)
 
