@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 import Phaser from 'phaser';
+const logic = require('../logic/gameLogic.js');
 
 const PhaserComponent = () => {
     useEffect(() => {
         let game;
+        let gameState = logic.createGamestate()
+        console.log(gameState)
         const config = {
             type: Phaser.AUTO,
             parent: 'phaser-example',
@@ -36,29 +39,32 @@ const PhaserComponent = () => {
             cardFiles.forEach((card) => {
                 this.load.image(card, 'cards/' + card + '.png');
             });
+
         }        
     
         function create() {
 
-            cardFiles.forEach((cardFile) => {
-                const card = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, cardFile);
-                card.setCollideWorldBounds(true);
-                card.setScale(0.1, 0.1)
-                card.setInteractive({ draggable: true });
+            // cardFiles.forEach((cardFile) => {
+            //     const card = this.physics.add.image(window.innerWidth / 2, window.innerHeight / 2, cardFile);
+            //     card.setCollideWorldBounds(true);
+            //     card.setScale(0.1, 0.1)
+            //     card.setInteractive({ draggable: true });
 
-                card.on('dragstart', function (pointer) {
-                    this.setDepth(1);
-                });
+            //     card.on('dragstart', function (pointer) {
+            //         this.setDepth(1);
+            //     });
 
-                card.on('drag', function (pointer, dragX, dragY) {
-                    this.x = dragX;
-                    this.y = dragY;
-                });
+            //     card.on('drag', function (pointer, dragX, dragY) {
+            //         this.x = dragX;
+            //         this.y = dragY;
+            //     });
 
-                card.on('dragend', function (pointer) {
-                    this.setDepth(0);
-                });
-            });
+            //     card.on('dragend', function (pointer) {
+            //         this.setDepth(0);
+            //     });
+            // });
+
+
 
         }
     
