@@ -29,8 +29,8 @@ function makeSecondDecision(gameObj) {
   const qValues2 = predict2.dataSync();
   const qValue2 = qValues2[action2];
   const drawString = getDrawString(gameObj, qValue2);
- // return {action2, qValues2, drawString};
- return drawString;
+  // return {action2, qValues2, drawString};
+  return drawString;
 };
 
 function getState(gameObj) {
@@ -49,7 +49,7 @@ function getState(gameObj) {
       }
     }
   }
-  
+
   const player2ExpeditionsFlat = [];
   for (const color in player2Expeditions) {
     if (player2Expeditions.hasOwnProperty(color)) {
@@ -90,16 +90,17 @@ function getPlayString(qValue, index) {
   }
 }
 
-function calculateReward(gameState) {
-  // Implement the logic to calculate the reward based on the game state
-
-  // Example: Calculate the difference in scores between the players
-  const player1Score = game.score(gameState).player1;
-  const player2Score = game.score(gameState).player2;
-  const reward = player1Score - player2Score;
-
-  // Return the reward
-  return reward;
+function calculateReward(gameObj, playAction, drawAction) {
+  // Check if the action is valid
+  try {
+    game.play(gameObj, playAction); // Attempt to play the action
+    game.draw(gameObj, drawAction);
+    // Action is valid, provide a positive reward
+    return 1.0;
+  } catch (error) {
+    // Action is invalid, provide a negative reward
+    return -1.0;
+  }
 }
 
 function getDrawString(gameObj, qValue) {
@@ -115,8 +116,8 @@ function getDrawString(gameObj, qValue) {
     const drawString = "discard " + colors[Math.floor(Math.random() * colors.length)];
     return drawString;
   }
-  
+
 }
 
 // Export the getState function
-module.exports = {getState, calculateReward, makeFirstDecision, makeSecondDecision, getInputSize, getState};
+module.exports = { getState, calculateReward, makeFirstDecision, makeSecondDecision, getInputSize, getState };
