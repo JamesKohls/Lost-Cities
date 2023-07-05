@@ -48,3 +48,4 @@ Please make sure to update tests as appropriate.
         - Second Layer and Third Layer: Based on the policy and Training Loop
         - Fourth Layer / Output Layer: Q values table
 2. Convert actions into valid strings based on the Q values and action index
+3. Make sure reward function only return positive rewards for favorable moves and vice versa
