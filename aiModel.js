@@ -64,7 +64,29 @@ class DQNAgent {
     }
   }
 
-
+  experienceReplay() {
+    if (this.memory.length < 32) {
+      return;
+    }
+    const miniBatch = _.sampleSize(this.memory, 32);
+    const states = [];
+    const targets = [];
+    for (const sample of miniBatch) {
+      const { state, action, reward, nextState, done } = sample;
+      const target = this.targetModel.predict(tf.tensor2d([state], [1, this.inputSize])).dataSync();
+      if (done) {
+        target[action] = reward;
+      } else {
+        const nextQValues = this.targetModel.predict(tf.tensor2d([nextState], [1, this.inputSize])).dataSync();
+        target[action] = reward + discountFactor * _.max(nextQValues);
+      }
+      states.push(state);
+      targets.push(target);
+    }
+    const x = tf.tensor2d(states, [states.length, this.inputSize]);
+    const y = tf.tensor2d(targets, [targets.length, this.outputSize]);
+    this.model.fit(x, y, { batchSize: 32, epochs: 1 });
+  }
 
   updateEpsilon() {
     if (this.epsilon > minEpsilon) {
