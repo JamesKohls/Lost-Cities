@@ -80,26 +80,13 @@ function getInputSize(gameObj) {
 }
 
 function getPlayString(qValue, index) {
-  if (qValue >= 0) {
+  if (qValue < 0) {
     const playString = "play " + index.toString();
     return playString;
   }
   else {
     const playString = "discard " + index.toString();
     return playString;
-  }
-}
-
-function calculateReward(gameObj, playAction, drawAction) {
-  // Check if the action is valid
-  try {
-    game.play(gameObj, playAction); // Attempt to play the action
-    game.draw(gameObj, drawAction);
-    // Action is valid, provide a positive reward
-    return 1.0;
-  } catch (error) {
-    // Action is invalid, provide a negative reward
-    return -1.0;
   }
 }
 
@@ -116,8 +103,107 @@ function getDrawString(gameObj, qValue) {
     const drawString = "discard " + colors[Math.floor(Math.random() * colors.length)];
     return drawString;
   }
+}
+function atempPlay(gameObj, playString) {
+  let reward;
+  let inputArr = playString.split(" ");
+  if (inputArr.length !== 2) {
+      throw new Error(colors.red("Invalid input. Please enter 'play (handIndex)' or 'discard (handIndex)'"));
+    }
+  else {
+      action = inputArr[0].toLowerCase();
+      handIndex = parseInt(inputArr[1]);
+  
+      if (action !== "play" && action !== "discard") {
+          throw new Error(colors.red("Invalid action. Please enter 'play (handIndex)' or 'discard (handIndex)'"));
+      }       
+  
+      else if (isNaN(handIndex) || handIndex < 0 || handIndex > 7) {
+          throw new Error(colors.red("Invalid hand index. Please enter a number from 0 to 7 for handIndex."));
+      }
+      else {
+          let selectedCard = gameObj[gameObj.turn].hand.splice(handIndex, 1)[0];
+          let deckLength = gameObj[gameObj.turn].expeditions[selectedCard.color].length
+      
+          if (action == 'play') {
+              let curVal = gameObj[gameObj.turn].expeditions[selectedCard.color][deckLength-1]
+              if (curVal) {
+                  if (curVal.value > selectedCard.value) {
+                      gameObj[gameObj.turn].hand.splice(handIndex, 0, selectedCard) // put selected card back
+                      throw new Error(colors.red("Invalid Move: cannot place card of lower value"));
+                  }
+              }
+              reward = 10;
+              return reward;        
+          } 
+          else if (action == 'discard') {
+            reward = 10;
+            return reward; 
+          } 
+      }
+  } 
+}
 
+function atempDraw(gameObj, drawString){
+  let reward;
+  let inputArr = drawString.split(" ");
+  action = inputArr[0].toLowerCase();
+  if (action != "draw" && action != "discard" || inputArr.length > 2) {
+      throw new Error(colors.red("Invalid input. Please enter 'draw' or 'discard (expedition)'."));
+  }
+              
+  if (action == "draw") {
+      if (inputArr.length > 1) {
+          throw new Error(colors.red("Invalid input. Please enter only 'draw' for drawing from the deck."));
+      }
+  }
+  if (action == "discard") {
+      expedition = inputArr[1].toLowerCase();
+      const validExpeditions = ["red", "green", "white", "blue", "yellow"];
+      if (inputArr.length !== 2) {
+          throw new Error(colors.red("Invalid input. Please enter 'discard (expedition)'."));
+      }           
+      else if (!validExpeditions.includes(expedition)) {
+          throw new Error(colors.red("Invalid expedition. Please enter one of the following colors: red, green, white, blue, yellow."));
+      }
+      else {
+          if (gameObj.discard[expedition].length > 0){
+              reward = 10;
+              return reward;
+          } 
+          else {
+              throw new Error(colors.red("Invalid Move: pile is empty"));
+          }
+
+      }
+  }  
+}
+
+function playReward(gameObj, playAction) {
+  // Check if the action is valid
+  try {
+    reward = atempPlay(gameObj, playAction); // Attempt to play the action
+    // Action is valid, provide a positive reward
+    return reward;
+  } 
+  catch (error) {
+    // Action is invalid, provide a negative reward
+    return -10;
+  }
+}
+
+function drawReward(gameObj, drawAction) {
+  // Check if the action is valid
+  try {
+    reward = atempDraw(gameObj, drawAction); // Attempt to play the action
+    // Action is valid, provide a positive reward
+    return reward;
+  } 
+  catch (error) {
+    // Action is invalid, provide a negative reward
+    return -10;
+  }
 }
 
 // Export the getState function
-module.exports = { getState, calculateReward, makeFirstDecision, makeSecondDecision, getInputSize, getState };
+module.exports = { getState, playReward, drawReward, makeFirstDecision, makeSecondDecision, getInputSize, getState };
