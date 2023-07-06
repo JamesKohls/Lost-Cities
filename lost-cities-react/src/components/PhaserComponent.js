@@ -53,11 +53,11 @@ const PhaserComponent = () => {
     
         function create() {
             cardFiles.forEach((cardFile) => {
-                const card = this.physics.add.image(400, 200, cardFile);
+                const card = this.physics.add.image(this.game.scale.width/2, this.game.scale.height/2, cardFile);
                 card.setCollideWorldBounds(true);
         
-                let scaleX = this.game.scale.width / card.width / 4
-                let scaleY = this.game.scale.height / card.height / 4
+                let scaleX = this.game.scale.width / card.width / 6
+                let scaleY = this.game.scale.height / card.height / 6
                 let scale = Math.min(scaleX, scaleY);
                 card.setScale(scale);
         
