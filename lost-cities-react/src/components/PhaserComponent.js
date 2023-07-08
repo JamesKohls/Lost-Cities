@@ -42,9 +42,10 @@ const PhaserComponent = () => {
         ];
 
         function preload() {
-            cardFiles.forEach((card) => {
-                this.load.image(card, 'cards/' + card + '.png');
-            });
+            // cardFiles.forEach((card) => {
+            //     this.load.image(card, 'cards/' + card + '.png');
+            //     //console.log(card, 'cards/' + card + '.png')
+            // });
         }        
 
         function initGameLogic(){
@@ -54,47 +55,59 @@ const PhaserComponent = () => {
     
         function create() {
             const addDragCard = (x, y, cardName) => {
-                const card = this.physics.add.image(x, y, cardName);
-                card.setCollideWorldBounds(true);
+                this.load.image(cardName, 'cards/' + cardName + '.png');
         
-                let scaleX = this.game.scale.width / card.width / 6;
-                let scaleY = this.game.scale.height / card.height / 6;
-                let scale = Math.min(scaleX, scaleY);
-                card.setScale(scale);
+                this.load.once('complete', () => {
+                    const card = this.physics.add.image(-200, -200, cardName); // Card is defined here, after the image has loaded
         
-                card.setInteractive({ draggable: true });
+                    let scaleX = this.game.scale.width / card.width / 6;
+                    let scaleY = this.game.scale.height / card.height / 6;
+                    let scale = Math.min(scaleX, scaleY);
+                    card.setScale(scale);
         
-                card.on('dragstart', function (pointer) {
-                    this.setDepth(1);
+                    card.setInteractive({ draggable: true });
+        
+                    card.on('dragstart', function (pointer) {
+                        this.setDepth(1);
+                    });
+        
+                    card.on('drag', function (pointer, dragX, dragY) {
+                        this.x = dragX;
+                        this.y = dragY;
+                    });
+        
+                    card.on('dragend', function (pointer) {
+                        this.setDepth(0);
+                    });
+        
+                    this.tweens.add({
+                        targets: card,
+                        x: x,
+                        y: y,
+                        ease: 'Power1',
+                        duration: 2000,
+                        delay: 0,
+                    });
                 });
         
-                card.on('drag', function (pointer, dragX, dragY) {
-                    this.x = dragX;
-                    this.y = dragY;
-                });
-        
-                card.on('dragend', function (pointer) {
-                    this.setDepth(0);
-                });
+                this.load.start();
             };
             const addDeck = () => {
                 cardFiles.forEach((cardFile) => {
-                    const x = Math.floor(Math.random() * 1600) + 1;
-                    const y = Math.floor(Math.random() * 1000) + 1;
+                    const x = Math.floor(Math.random() * 1200) + 200;
+                    const y = Math.floor(Math.random() * 600) + 200;
                     addDragCard(x, y, cardFile);
                 });
             };
             const addHand = (hand) => {
-                //console.log(hand)
                 hand.forEach((card) => {
                     let cardName = card.color + card.value
-                    const x = Math.floor(Math.random() * 1600) + 1;
-                    const y = Math.floor(Math.random() * 1000) + 1;
+                    const x = Math.floor(Math.random() * 1200) + 200;
+                    const y = Math.floor(Math.random() * 600) + 200;
                     addDragCard(x, y, cardName);
                 });
             };
         
-            //console.log(gameObj)
             addHand(gameObj.player1.hand)
         }
         
