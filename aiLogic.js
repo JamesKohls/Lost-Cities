@@ -35,7 +35,7 @@ function makeSecondDecision(gameObj) {
 
 function getState(gameObj) {
   const deckSize = gameObj.deck.length;
-  const aiHand = gameObj.player2.hand;
+  const aiHand = _.cloneDeep(gameObj.player2.hand);
   const player1Expeditions = gameObj.player1.expeditions;
   const player2Expeditions = gameObj.player2.expeditions;
   const discardPile = Object.values(gameObj.discard).flat();
@@ -80,7 +80,7 @@ function getInputSize(gameObj) {
 }
 
 function getPlayString(qValue, index) {
-  if (qValue < 0) {
+  if (qValue >= 0) {
     const playString = "play " + index.toString();
     return playString;
   }
@@ -99,11 +99,13 @@ function getDrawString(gameObj, qValue) {
     return drawString
   }
   else {
-    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
-    const drawString = "discard " + colors[Math.floor(Math.random() * colors.length)];
+    const nonEmptyColors = colors.filter((_, index) => discardPileLengths[index] > 0);
+    const randomColor = nonEmptyColors[Math.floor(Math.random() * nonEmptyColors.length)];
+    const drawString = "discard " + randomColor;
     return drawString;
   }
 }
+
 function atempPlay(gameObj, playString) {
   let reward;
   let inputArr = playString.split(" ");
@@ -123,20 +125,22 @@ function atempPlay(gameObj, playString) {
       }
       else {
           let selectedCard = gameObj[gameObj.turn].hand.splice(handIndex, 1)[0];
-          let deckLength = gameObj[gameObj.turn].expeditions[selectedCard.color].length
+          let deckLength = gameObj[gameObj.turn].expeditions[selectedCard.color].length;
       
           if (action == 'play') {
               let curVal = gameObj[gameObj.turn].expeditions[selectedCard.color][deckLength-1]
               if (curVal) {
                   if (curVal.value > selectedCard.value) {
-                      gameObj[gameObj.turn].hand.splice(handIndex, 0, selectedCard) // put selected card back
+                      gameObj[gameObj.turn].hand.splice(handIndex, 0, selectedCard); // put selected card back
                       throw new Error(colors.red("Invalid Move: cannot place card of lower value"));
                   }
               }
+              gameObj[gameObj.turn].hand.splice(handIndex, 0, selectedCard); // put selected card back
               reward = 10;
               return reward;        
           } 
           else if (action == 'discard') {
+            gameObj[gameObj.turn].hand.splice(handIndex, 0, selectedCard); // put selected card back
             reward = 10;
             return reward; 
           } 
@@ -155,6 +159,10 @@ function atempDraw(gameObj, drawString){
   if (action == "draw") {
       if (inputArr.length > 1) {
           throw new Error(colors.red("Invalid input. Please enter only 'draw' for drawing from the deck."));
+      }
+      else {
+        reward = 10;
+        return reward;
       }
   }
   if (action == "discard") {
