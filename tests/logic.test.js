@@ -1,9 +1,10 @@
 // logic.test.js
 
 let cards = require('../cards.json');
-const { createGamestate, shuffle, deal, play, draw, turn, score, endgame} = require('../gameLogic.js');  
+const _ = require('lodash');
+const { createGamestate, shuffle, deal, play, draw, turn, score, endgame } = require('../gameLogic.js');
 
-function unshuffledGameInit(){
+function unshuffledGameInit() {
     let game = createGamestate()
     game.deck = [...cards]  // Creates a copy of cardDeck
     deal(game)
@@ -21,10 +22,10 @@ function unshuffledGameInit(){
 }
 
 test('shuffles fifteen items', () => {
-    let deck = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    let deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     let shuffledDeck = [...deck]; // make a copy of the deck
     shuffle(shuffledDeck);
-    
+
     // Check that not every card is in its original position
     let samePositionCount = 0;
     for (let i = 0; i < deck.length; i++) {
@@ -32,7 +33,7 @@ test('shuffles fifteen items', () => {
             samePositionCount++;
         }
     }
-    
+
     expect(samePositionCount).toBeLessThan(deck.length);
 });
 
@@ -42,24 +43,24 @@ test('deals cards from a deck', () => {
     expect(game.player1.hand.length).toEqual(8);
     expect(game.player2.hand.length).toEqual(8);
 
-    expect(game.player1.hand[0]).toEqual({"color": "red", "value": 0});
-    expect(game.player1.hand[3]).toEqual({"color": "red", "value": 5});
-    expect(game.player1.hand[7]).toEqual({"color": "green", "value": 0});
+    expect(game.player1.hand[0]).toEqual({ "color": "red", "value": 0 });
+    expect(game.player1.hand[3]).toEqual({ "color": "red", "value": 5 });
+    expect(game.player1.hand[7]).toEqual({ "color": "green", "value": 0 });
 
-    expect(game.player2.hand[0]).toEqual({"color": "red", "value": 0});
-    expect(game.player2.hand[3]).toEqual({"color": "red", "value": 6});
-    expect(game.player2.hand[7]).toEqual({"color": "green", "value": 2});
+    expect(game.player2.hand[0]).toEqual({ "color": "red", "value": 0 });
+    expect(game.player2.hand[3]).toEqual({ "color": "red", "value": 6 });
+    expect(game.player2.hand[7]).toEqual({ "color": "green", "value": 2 });
 })
 
-test('places a valid card in expedition', () => { 
+test('places a valid card in expedition', () => {
     let game = unshuffledGameInit()
     play(game, "play 0");
     expect(game.player1.expeditions.red).toEqual([{ color: 'red', value: 0 }]);
 })
 
-test('places valid cards in expeditions', () => { 
+test('places valid cards in expeditions', () => {
     let game = unshuffledGameInit()
-    for(let i =0; i<24; i++){
+    for (let i = 0; i < 24; i++) {
         play(game, "play 0");
         draw(game, "draw");
         game.turn = "player1"
@@ -69,21 +70,21 @@ test('places valid cards in expeditions', () => {
     expect(game.player1.expeditions.white.length).toEqual(8);
 })
 
-test('places a valid card in discard', () => { 
+test('places a valid card in discard', () => {
     let game = unshuffledGameInit()
     play(game, "discard 0");
     expect(game.discard.red).toEqual([{ color: 'red', value: 0 }]);
 })
 
-test('takes a card from discard', () => { 
+test('takes a card from discard', () => {
     let game = unshuffledGameInit()
-    game.discard.yellow.push({"color": "yellow", "value": 5})
+    game.discard.yellow.push({ "color": "yellow", "value": 5 })
     play(game, "play 0");
     draw(game, "discard yellow")
     expect(game.player1.hand).toContainEqual({ color: 'yellow', value: 5 });
 })
 
-test('places a card in the wrong order', () => { 
+test('places a card in the wrong order', () => {
     let game = unshuffledGameInit();
     play(game, "play 3");
     play(game, "play 3");
@@ -93,7 +94,7 @@ test('places a card in the wrong order', () => {
     }).toThrow('Invalid Move: cannot place card of lower value');
 });
 
-test('places a card in the wrong order', () => { 
+test('places a card in the wrong order', () => {
     let game = unshuffledGameInit();
     play(game, "play 0");
     play(game, "play 0");
@@ -105,7 +106,7 @@ test('places a card in the wrong order', () => {
     }).toThrow('Invalid Move: cannot place card of lower value');
 });
 
-test('ensure hand is refilled on bad input', () => { 
+test('ensure hand is refilled on bad input', () => {
     let game = unshuffledGameInit();
     play(game, "play 4");
     draw(game, "draw")
@@ -119,7 +120,7 @@ test('ensure hand is refilled on bad input', () => {
     expect(game.player1.hand.length).toEqual(8);
 });
 
-test('take a card from empty discard', () => { 
+test('take a card from empty discard', () => {
     let game = unshuffledGameInit();
     play(game, "play 0");
     expect(() => {
@@ -133,12 +134,12 @@ test('play card after incorrect move', () => {
     expect(() => {
         play(game, "play 3");
     }).toThrow('Invalid Move: cannot place card of lower value');
-    expect(game.player1.hand[0]).toEqual({color: 'red', value: 0 });
-    expect(game.player1.hand[3]).toEqual({color: 'red', value: 5 });
-    expect(game.player1.hand[6]).toEqual({color: 'green', value: 0 });
+    expect(game.player1.hand[0]).toEqual({ color: 'red', value: 0 });
+    expect(game.player1.hand[3]).toEqual({ color: 'red', value: 5 });
+    expect(game.player1.hand[6]).toEqual({ color: 'green', value: 0 });
 });
 
-test('next turn', () => { 
+test('next turn', () => {
     let game = unshuffledGameInit();
     play(game, "play 0");
     turn(game)
@@ -169,13 +170,13 @@ test('calculates score for expeditions with only wager cards', () => {
         player1: -120,
         player2: -80
     });
-  });
+});
 
 test('calculates score for expeditions with wager cards (Only player1 has cards)', () => {
     let game = unshuffledGameInit();
     game.player1.expeditions.red = [
         { color: 'red', value: 0 }, { color: 'red', value: 2 }, { color: 'red', value: 5 }, { color: 'red', value: 7 },];
-    game.player1.expeditions.white = [{ color: 'white', value: 10},];
+    game.player1.expeditions.white = [{ color: 'white', value: 10 },];
     game.player1.expeditions.blue = [{ color: 'blue', value: 5 },];
 
     expect(score(game)).toEqual({
@@ -190,13 +191,13 @@ test('calculates score for expeditions with wager cards (Both Players have cards
     // player 1
     game.player1.expeditions.red = [
         { color: 'red', value: 0 }, { color: 'red', value: 2 }, { color: 'red', value: 5 }, { color: 'red', value: 7 },];
-    game.player1.expeditions.white = [{ color: 'white', value: 10},];
+    game.player1.expeditions.white = [{ color: 'white', value: 10 },];
     game.player1.expeditions.blue = [{ color: 'blue', value: 5 },];
 
     // player 2
     game.player2.expeditions.red = [
         { color: 'red', value: 0 }, { color: 'red', value: 3 }, { color: 'red', value: 7 }, { color: 'red', value: 10 },];
-    game.player2.expeditions.white = [{ color: 'white', value: 0 }, { color: 'white', value: 10},];
+    game.player2.expeditions.white = [{ color: 'white', value: 0 }, { color: 'white', value: 10 },];
     game.player2.expeditions.blue = [{ color: 'green', value: 7 },];
 
     expect(score(game)).toEqual({
@@ -208,7 +209,7 @@ test('calculates score for expeditions with wager cards (Both Players have cards
 test('checks if game ends when no cards left in the deck', () => {
     let game = unshuffledGameInit();
     expect(endgame(game)).toBe(false);
-  
+
     // Simulate emptying the deck
     game.deck = [];
     expect(endgame(game)).toBe(true);
@@ -224,23 +225,23 @@ test('Should print out the victory message when game ends', () => {
     console.log = jest.fn();
 
     if (endgame(game)) {
-      if (player1Score > player2Score) {
-        console.log(`\n${game.player1.name} wins! Congratulations!`);
-      } 
-      else if (player2Score > player1Score) {
-        console.log(`\n${game.player2.name} wins! Congratulations!`);
-      } 
-      else {
-        console.log("\nIt's a tie! The game ends in a draw.");
-      }
+        if (player1Score > player2Score) {
+            console.log(`\n${game.player1.name} wins! Congratulations!`);
+        }
+        else if (player2Score > player1Score) {
+            console.log(`\n${game.player2.name} wins! Congratulations!`);
+        }
+        else {
+            console.log("\nIt's a tie! The game ends in a draw.");
+        }
     }
-  
+
     expect(console.log).toHaveBeenCalledWith(`\n${game.player1.name} wins! Congratulations!`);
-  });
-  
-  test('checks the length of discard pile', () => {
+});
+
+test('checks the length of discard pile', () => {
     let game = unshuffledGameInit();
-    game.discard= { // object where each key is a color and each value is an array of cards
+    game.discard = { // object where each key is a color and each value is an array of cards
         red: [],
         green: [],
         white: [],
@@ -255,10 +256,10 @@ test('Should print out the victory message when game ends', () => {
 
 test('checks the length of discard pile', () => {
     let game = unshuffledGameInit();
-    game.discard= { // object where each key is a color and each value is an array of cards
+    game.discard = { // object where each key is a color and each value is an array of cards
         red: [],
         green: [],
-        white: [{color: 'white', value: 4 }],
+        white: [{ color: 'white', value: 4 }],
         blue: [],
         yellow: [],
     }
@@ -266,4 +267,19 @@ test('checks the length of discard pile', () => {
     const discardPileLengths = colors.map(color => game.discard[color].length);
     const isAllColorsEmpty = discardPileLengths.every(length => length == 0);
     expect(isAllColorsEmpty).toBe(false);
+});
+
+test('checks which colors of discard pile is not empty', () => {
+    let game = unshuffledGameInit();
+    game.discard = { // object where each key is a color and each value is an array of cards
+        red: [{ color: 'red', value: 4 }],
+        green: [],
+        white: [{ color: 'white', value: 4 }],
+        blue: [],
+        yellow: [],
+    }
+    const colors = ['red', 'green', 'white', 'blue', 'yellow'];
+    const discardPileLengths = colors.map(color => game.discard[color].length);
+    const nonEmptyColors = colors.filter((_, index) => discardPileLengths[index] > 0);
+    console.log(nonEmptyColors);
 });
