@@ -110,7 +110,7 @@ function play(gameObj, playString) {
 
 function draw(gameObj, drawString){
     let inputArr = drawString.split(" ");
-    action = inputArr[0].toLowerCase();
+    let action = inputArr[0].toLowerCase();
     if (action != "draw" && action != "discard" || inputArr.length > 2) {
         throw new Error(colors.red("Invalid input. Please enter 'draw' or 'discard (expedition)'."));
     }
@@ -125,7 +125,7 @@ function draw(gameObj, drawString){
         }
     }
     if (action == "discard") {
-        expedition = inputArr[1].toLowerCase();
+        let expedition = inputArr[1].toLowerCase();
         const validExpeditions = ["red", "green", "white", "blue", "yellow"];
         if (inputArr.length !== 2) {
             throw new Error(colors.red("Invalid input. Please enter 'discard (expedition)'."));
