@@ -21,7 +21,7 @@ const PhaserComponent = () => {
             },
             scene: {
                 preload: preload,
-                initGameLogic: initGameLogic,
+                init: initGameLogic,
                 create: create,
             },
             scale: {
@@ -48,11 +48,12 @@ const PhaserComponent = () => {
         }        
 
         function initGameLogic(){
-            gameObj.deck = game.shuffle(cardData)
+            gameObj.deck = logic.shuffle(cardData)
+            logic.deal(gameObj)
         }
     
         function create() {
-            const addCard = (x, y, cardName) => {
+            const addDragCard = (x, y, cardName) => {
                 const card = this.physics.add.image(x, y, cardName);
                 card.setCollideWorldBounds(true);
         
@@ -76,21 +77,27 @@ const PhaserComponent = () => {
                     this.setDepth(0);
                 });
             };
+            const addDeck = () => {
+                cardFiles.forEach((cardFile) => {
+                    const x = Math.floor(Math.random() * 1600) + 1;
+                    const y = Math.floor(Math.random() * 1000) + 1;
+                    addDragCard(x, y, cardFile);
+                });
+            };
+            const addHand = (hand) => {
+                //console.log(hand)
+                hand.forEach((card) => {
+                    let cardName = card.color + card.value
+                    const x = Math.floor(Math.random() * 1600) + 1;
+                    const y = Math.floor(Math.random() * 1000) + 1;
+                    addDragCard(x, y, cardName);
+                });
+            };
         
-            cardFiles.forEach((cardFile) => {
-                const x = Math.floor(Math.random() * 1600) + 1;
-                const y = Math.floor(Math.random() * 1000) + 1;
-                addCard(x, y, cardFile);
-            });
+            //console.log(gameObj)
+            addHand(gameObj.player1.hand)
         }
         
-        
-        function loadHand(hand){
-            hand.forEach((card) => {
-                let cardName = card.color + card.value
-                //const card = this.physics.add.image(Math.floor(Math.random() * 1600) + 1, Math.floor(Math.random() * 1000) + 1, cardName);
-            });
-        }   
 
         // Function to handle window resize
         function resize() {
