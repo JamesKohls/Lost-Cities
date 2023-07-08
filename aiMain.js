@@ -61,7 +61,7 @@ const startApp = async () => {
             console.log(ui.printHand(gameState[gameState.turn].hand).toString(), "\n");
             console.log("Deck Size: ", gameState.deck.length);
             // Ask the user to play/discard a card from hand
-            while (true) {
+            while (!game.endgame(gameState)) {
                 if (gameState[gameState.turn].name == p1) {
                     console.log("input: (play/discard) (handIndex)");
                     let playString = await readLineAsync("");
@@ -75,13 +75,18 @@ const startApp = async () => {
                 }
 
                 else if (gameState[gameState.turn].name == "AI") {
+                    let curState = ai.getState(gameState);
                     let playString = ai.makeFirstDecision(gameState);
                     console.log(playString);
                     try {             
                         let reward = ai.playReward(gameState, playString);
                         game.play(gameState, playString);
+                        let nextState = ai.getState(gameState);
+                        let done = game.endgame(gameState);
                         console.log(reward);
-                        // agent1.memorize(ai.getState(gameState), playString, reward, ai.getState(gameState), false);
+                        agent1.memorize(curState, playString, reward, nextState, done);
+                        agent1.experienceReplay();
+                        agent1.updateEpsilon();
                         break;
                     }
                     catch (error) {
@@ -93,7 +98,7 @@ const startApp = async () => {
 
             // Ask the user to draw a card from the deck or from the expedition
 
-            while (true) {
+            while (!game.endgame(gameState)) {
                 if (gameState[gameState.turn].name == p1) {
                     console.log("input: draw OR discard (expedition), enter: draw");
                     let drawString = await readLineAsync("");
@@ -111,13 +116,18 @@ const startApp = async () => {
                 }
 
                 else if (gameState[gameState.turn].name == "AI") {
+                    let curState = ai.getState(gameState);
                     let drawString = ai.makeSecondDecision(gameState);
                     console.log(drawString);
                     try {
                         let reward = ai.drawReward(gameState, drawString);
                         game.draw(gameState, drawString);
+                        let nextState = ai.getState(gameState);
+                        let done = game.endgame(gameState);
                         console.log(reward);
-                        // agent2.memorize(ai.getState(gameState), drawString, reward, ai.getState(gameState), false);
+                        agent2.memorize(curState, drawString, reward, nextState, done);
+                        agent2.experienceReplay();
+                        agent2.updateEpsilon();
                         break;
                     }
                     catch (error) {

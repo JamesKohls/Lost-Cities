@@ -76,7 +76,8 @@ class DQNAgent {
       const target = this.targetModel.predict(tf.tensor2d([state], [1, this.inputSize])).dataSync();
       if (done) {
         target[action] = reward;
-      } else {
+      } 
+      else {
         const nextQValues = this.targetModel.predict(tf.tensor2d([nextState], [1, this.inputSize])).dataSync();
         target[action] = reward + discountFactor * _.max(nextQValues);
       }
