@@ -66,7 +66,7 @@ const startApp = async () => {
                     console.log("input: (play/discard) (handIndex)");
                     let playString = await readLineAsync("");
                     try {
-                        game.play(gameState, playString);
+                        game.play(gameState, playString);   
                         break;
                     }
                     catch (error) {
@@ -77,9 +77,11 @@ const startApp = async () => {
                 else if (gameState[gameState.turn].name == "AI") {
                     let playString = ai.makeFirstDecision(gameState);
                     console.log(playString);
-                    try {
+                    try {             
+                        let reward = ai.playReward(gameState, playString);
                         game.play(gameState, playString);
-
+                        console.log(reward);
+                        // agent1.memorize(ai.getState(gameState), playString, reward, ai.getState(gameState), false);
                         break;
                     }
                     catch (error) {
@@ -112,7 +114,10 @@ const startApp = async () => {
                     let drawString = ai.makeSecondDecision(gameState);
                     console.log(drawString);
                     try {
+                        let reward = ai.drawReward(gameState, drawString);
                         game.draw(gameState, drawString);
+                        console.log(reward);
+                        // agent2.memorize(ai.getState(gameState), drawString, reward, ai.getState(gameState), false);
                         break;
                     }
                     catch (error) {
