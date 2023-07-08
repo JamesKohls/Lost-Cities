@@ -52,12 +52,12 @@ const PhaserComponent = () => {
         }
     
         function create() {
-            cardFiles.forEach((cardFile) => {
-                const card = this.physics.add.image(this.game.scale.width/2, this.game.scale.height/2, cardFile);
+            const addCard = (x, y, cardName) => {
+                const card = this.physics.add.image(x, y, cardName);
                 card.setCollideWorldBounds(true);
         
-                let scaleX = this.game.scale.width / card.width / 6
-                let scaleY = this.game.scale.height / card.height / 6
+                let scaleX = this.game.scale.width / card.width / 6;
+                let scaleY = this.game.scale.height / card.height / 6;
                 let scale = Math.min(scaleX, scaleY);
                 card.setScale(scale);
         
@@ -75,12 +75,25 @@ const PhaserComponent = () => {
                 card.on('dragend', function (pointer) {
                     this.setDepth(0);
                 });
+            };
+        
+            cardFiles.forEach((cardFile) => {
+                const x = Math.floor(Math.random() * 1600) + 1;
+                const y = Math.floor(Math.random() * 1000) + 1;
+                addCard(x, y, cardFile);
             });
         }
+        
+        
+        function loadHand(hand){
+            hand.forEach((card) => {
+                let cardName = card.color + card.value
+                //const card = this.physics.add.image(Math.floor(Math.random() * 1600) + 1, Math.floor(Math.random() * 1000) + 1, cardName);
+            });
+        }   
 
         // Function to handle window resize
         function resize() {
-            //console.log("resize")
             game.scale.refresh();
         }
     
