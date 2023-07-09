@@ -35,7 +35,7 @@ function makeSecondDecision(gameObj) {
 
 function getState(gameObj) {
   const deckSize = gameObj.deck.length;
-  const aiHand = _.cloneDeep(gameObj.player2.hand);
+  const aiHand = _.cloneDeep(gameObj[gameObj.turn].hand);
   const player1Expeditions = gameObj.player1.expeditions;
   const player2Expeditions = gameObj.player2.expeditions;
   const discardPile = Object.values(gameObj.discard).flat();
@@ -94,14 +94,15 @@ function getDrawString(gameObj, qValue) {
   const colors = ['red', 'green', 'white', 'blue', 'yellow'];
   const discardPileLengths = colors.map(color => gameObj.discard[color].length);
   const isAllColorsEmpty = discardPileLengths.every(length => length == 0);
+  let drawString;
   if (isAllColorsEmpty || qValue < 0) {
-    const drawString = "draw"
+    drawString = "draw"
     return drawString
   }
   else {
     const nonEmptyColors = colors.filter((_, index) => discardPileLengths[index] > 0);
     const randomColor = nonEmptyColors[Math.floor(Math.random() * nonEmptyColors.length)];
-    const drawString = "discard " + randomColor;
+    drawString = "discard " + randomColor;
     return drawString;
   }
 }
