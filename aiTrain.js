@@ -118,9 +118,9 @@ const startApp = async () => {
                         let nextState = ai.getState(gameState);
                         let done = game.endgame(gameState);
                         console.log(reward);
-                        // agent2.memorize(curState, drawString, reward, nextState, done);
-                        // agent2.experienceReplay();
-                        // agent2.updateEpsilon();
+                        agent2.memorize(curState, drawString, reward, nextState, done);
+                        agent2.experienceReplay();
+                        agent2.updateEpsilon();
                         break;
                     }
                     catch (error) {
@@ -139,9 +139,9 @@ const startApp = async () => {
                         let nextState = ai.getState(gameState);         
                         let done = game.endgame(gameState);              
                         console.log(reward);
-                        // agent4.memorize(curState, drawString, reward, nextState, done);
-                        // agent4.experienceReplay();
-                        // agent4.updateEpsilon();
+                        agent4.memorize(curState, drawString, reward, nextState, done);
+                        agent4.experienceReplay();
+                        agent4.updateEpsilon();
                         break;
                     }
                     catch (error) {
