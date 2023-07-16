@@ -63,7 +63,11 @@ const startApp = async () => {
             while (true) {
                 if (gameState[gameState.turn].name == "AI James") {
                     let curState = ai.getState(gameState);
-                    let playString = ai.makeFirstDecision(gameState);
+                    let action1 = agent1.selectAction(curState);
+                    let predict1 = agent1.predict(curState);
+                    let qValues1 = predict1.dataSync();
+                    let qValue1 = qValues1[action1];
+                    let playString = ai.getPlayString(qValue1, action1);
                     console.log(playString);
                     try {
                         let reward = ai.playReward(gameState, playString);
@@ -71,9 +75,9 @@ const startApp = async () => {
                         let nextState = ai.getState(gameState);
                         let done = game.endgame(gameState);
                         console.log(reward);
-                        //agent1.memorize(curState, playString, reward, nextState, done);
-                        //agent1.experienceReplay();
-                        //agent1.updateEpsilon();
+                        agent1.memorize(curState, playString, reward, nextState, done);
+                        agent1.experienceReplay();
+                        agent1.updateEpsilon();
                         break;
                     }
                     catch (error) {
@@ -83,7 +87,11 @@ const startApp = async () => {
 
                 else if (gameState[gameState.turn].name == "AI Jay") {
                     let curState = ai.getState(gameState);
-                    let playString = ai.makeFirstDecision(gameState);
+                    let action1 = agent3.selectAction(curState);
+                    let predict1 = agent3.predict(curState);
+                    let qValues1 = predict1.dataSync();
+                    let qValue1 = qValues1[action1];
+                    let playString = ai.getPlayString(qValue1, action1);
                     console.log(playString);
                     try {
                         let reward = ai.playReward(gameState, playString);
@@ -91,9 +99,9 @@ const startApp = async () => {
                         let nextState = ai.getState(gameState);
                         let done = game.endgame(gameState);
                         console.log(reward);
-                        //agent3.memorize(curState, playString, reward, nextState, done);
-                        //agent3.experienceReplay();
-                        //agent3.updateEpsilon();
+                        agent3.memorize(curState, playString, reward, nextState, done);
+                        agent3.experienceReplay();
+                        agent3.updateEpsilon();
                         break;
                     }
                     catch (error) {
@@ -108,7 +116,11 @@ const startApp = async () => {
             while (true) {
                 if (gameState[gameState.turn].name == "AI James") {
                     let curState = ai.getState(gameState);
-                    let drawString = ai.makeSecondDecision(gameState);
+                    let action1 = agent3.selectAction(curState);
+                    let predict1 = agent3.predict(curState);
+                    let qValues1 = predict1.dataSync();
+                    let qValue1 = qValues1[action1];
+                    let playString = ai.getPlayString(qValue1, action1);
                     console.log(drawString);
                     try {
                         let reward = ai.drawReward(gameState, drawString);
@@ -116,9 +128,9 @@ const startApp = async () => {
                         let nextState = ai.getState(gameState);
                         let done = game.endgame(gameState);
                         console.log(reward);
-                        //agent2.memorize(curState, drawString, reward, nextState, done);
-                        //agent2.experienceReplay();
-                        //agent2.updateEpsilon();
+                        agent2.memorize(curState, drawString, reward, nextState, done);
+                        agent2.experienceReplay();
+                        agent2.updateEpsilon();
                         break;
                     }
                     catch (error) {
@@ -136,9 +148,9 @@ const startApp = async () => {
                         let nextState = ai.getState(gameState);
                         let done = game.endgame(gameState);
                         console.log(reward);
-                        //agent4.memorize(curState, drawString, reward, nextState, done);
-                        //agent4.experienceReplay();
-                        //agent4.updateEpsilon();
+                        agent4.memorize(curState, drawString, reward, nextState, done);
+                        agent4.experienceReplay();
+                        agent4.updateEpsilon();
                         break;
                     }
                     catch (error) {

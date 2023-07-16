@@ -215,4 +215,4 @@ function drawReward(gameObj, drawAction) {
 }
 
 // Export the getState function
-module.exports = { getState, playReward, drawReward, makeFirstDecision, makeSecondDecision, getInputSize, getState };
+module.exports = { getState, playReward, drawReward, makeFirstDecision, makeSecondDecision, getInputSize, getDrawString, getPlayString };
