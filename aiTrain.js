@@ -28,7 +28,7 @@ const startApp = async () => {
     let totalScores = { player1: 0, player2: 0 };
     let gameState;
 
-    for (let gameCount = 1; gameCount <= 1; gameCount++) {
+    for (let gameCount = 1; gameCount <= 10; gameCount++) {
         console.log(`Game ${gameCount}:`);
         // shuffe deck
         gameState = game.createGamestate()
@@ -179,6 +179,7 @@ const startApp = async () => {
         console.log(`Total scores after Game ${gameCount}:`);
         console.log(`${gameState.player1.name}: ${totalScores.player1}`);
         console.log(`${gameState.player2.name}: ${totalScores.player2}`);
+
     }
 
     if (totalScores.player1 > totalScores.player2) {
