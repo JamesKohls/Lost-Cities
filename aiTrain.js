@@ -28,7 +28,7 @@ const startApp = async () => {
     let totalScores = { player1: 0, player2: 0 };
     let gameState;
 
-    for (let gameCount = 1; gameCount <= 100; gameCount++) {
+    for (let gameCount = 1; gameCount <= 1; gameCount++) {
         console.log(`Game ${gameCount}:`);
         // shuffe deck
         gameState = game.createGamestate()
@@ -42,10 +42,10 @@ const startApp = async () => {
         // deal the cards
         game.deal(gameState)
 
-        const agent1 = new DQNAgent(ai.getInputSize(gameState), 8);
-        const agent2 = new DQNAgent(ai.getInputSize(gameState), 6);
-        const agent3 = new DQNAgent(ai.getInputSize(gameState), 8);
-        const agent4 = new DQNAgent(ai.getInputSize(gameState), 6);
+        //const agent1 = new DQNAgent(ai.getInputSize(gameState), 8);
+        //const agent2 = new DQNAgent(ai.getInputSize(gameState), 6);
+        //const agent3 = new DQNAgent(ai.getInputSize(gameState), 8);
+        //const agent4 = new DQNAgent(ai.getInputSize(gameState), 6);
 
         while (!game.endgame(gameState)) {
             //console.log(ui.printDiscard(gameState.discard))
@@ -60,6 +60,9 @@ const startApp = async () => {
             console.log(ui.printHand(gameState[gameState.turn].hand).toString(), "\n");
             console.log("Deck Size: ", gameState.deck.length);
             // Ask the user to play/discard a card from hand
+
+            let agent1 = new DQNAgent(ai.getInputSize(gameState), 8);
+            let agent3 = new DQNAgent(ai.getInputSize(gameState), 8);
             while (true) {
                 if (gameState[gameState.turn].name == "AI James") {
                     let curState = ai.getState(gameState);
@@ -111,16 +114,18 @@ const startApp = async () => {
 
             }
 
+            let agent2 = new DQNAgent(ai.getInputSize(gameState), 8);
+            let agent4 = new DQNAgent(ai.getInputSize(gameState), 8);
             // Ask the user to draw a card from the deck or from the expedition
 
             while (true) {
                 if (gameState[gameState.turn].name == "AI James") {
                     let curState = ai.getState(gameState);
-                    let action1 = agent3.selectAction(curState);
-                    let predict1 = agent3.predict(curState);
-                    let qValues1 = predict1.dataSync();
-                    let qValue1 = qValues1[action1];
-                    let playString = ai.getPlayString(qValue1, action1);
+                    let action2 = agent2.selectAction(curState);
+                    let predict2 = agent2.predict(curState);
+                    let qValues2 = predict2.dataSync();
+                    let qValue2 = qValues2[action2];
+                    let drawString = ai.getDrawString(gameState, qValue2);
                     console.log(drawString);
                     try {
                         let reward = ai.drawReward(gameState, drawString);
@@ -140,7 +145,11 @@ const startApp = async () => {
 
                 else if (gameState[gameState.turn].name == "AI Jay") {
                     let curState = ai.getState(gameState);
-                    let drawString = ai.makeSecondDecision(gameState);
+                    let action2 = agent4.selectAction(curState);
+                    let predict2 = agent4.predict(curState);
+                    let qValues2 = predict2.dataSync();
+                    let qValue2 = qValues2[action2];
+                    let drawString = ai.getDrawString(gameState, qValue2);
                     console.log(drawString);
                     try {
                         let reward = ai.drawReward(gameState, drawString);
