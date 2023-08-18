@@ -1,6 +1,6 @@
 # Lost Cities
 
-Lost Cities is a Javascript recreation of the popular card game "Lost Cities"
+Lost Cities is a Javascript recreation of the popular card game "Lost Cities", both with other players and bots trained on a deep learning model
 
 ## Installation
 
