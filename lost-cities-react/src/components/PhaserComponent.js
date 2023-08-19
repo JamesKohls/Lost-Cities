@@ -100,11 +100,17 @@ const PhaserComponent = () => {
                 });
             };
             const addHand = (hand) => {
+                let handLength = hand.length
+                let cardStep = 400 / handLength
+                let cardPos = 600
+                console.log(handLength)
                 hand.forEach((card) => {
                     let cardName = card.color + card.value
-                    const x = Math.floor(Math.random() * 1200) + 200;
-                    const y = Math.floor(Math.random() * 600) + 200;
-                    addDragCard(x, y, cardName);
+                    cardPos = cardPos + cardStep
+                    //const x = Math.floor(Math.random() * 1200) + 200;
+                    // const y = Math.floor(Math.random() * 600) + 200;
+                    const y = 800;
+                    addDragCard(cardPos, y, cardName);
                 });
             };
         
