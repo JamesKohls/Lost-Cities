@@ -12,7 +12,7 @@ const PhaserComponent = () => {
             type: Phaser.AUTO,
             parent: 'phaser-example',
             width: 1600,
-            height: 1000,
+            height: 900,
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -42,10 +42,8 @@ const PhaserComponent = () => {
         ];
 
         function preload() {
-            // cardFiles.forEach((card) => {
-            //     this.load.image(card, 'cards/' + card + '.png');
-            //     //console.log(card, 'cards/' + card + '.png')
-            // });
+            this.load.image('table', 'scenery/table2.png');
+            this.load.image('expeditions', 'scenery/expeditions.png');
         }        
 
         function initGameLogic(){
@@ -54,6 +52,10 @@ const PhaserComponent = () => {
         }
     
         function create() {
+            const background = this.add.image(0, 0, 'table').setOrigin(0, 0);
+            const expeditionss = this.add.image(0, 0, 'expeditions').setOrigin(0, 0);
+            expeditionss.setDepth(1);
+            
             const addDragCard = (x, y, cardName) => {
                 this.load.image(cardName, 'cards/' + cardName + '.png');
         
@@ -101,8 +103,8 @@ const PhaserComponent = () => {
             };
             const addHand = (hand) => {
                 let handLength = hand.length
-                let cardStep = 400 / handLength
-                let cardPos = 600
+                let cardStep = 1100 / handLength
+                let cardPos = 200
                 console.log(handLength)
                 hand.forEach((card) => {
                     let cardName = card.color + card.value
