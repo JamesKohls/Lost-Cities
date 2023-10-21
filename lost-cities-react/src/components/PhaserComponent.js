@@ -44,6 +44,7 @@ const PhaserComponent = () => {
         function preload() {
             this.load.image('table', 'scenery/table2.png');
             this.load.image('expeditions', 'scenery/expeditions.png');
+            this.load.image('back', 'scenery/back.png');
         }        
 
         function initGameLogic(){
@@ -53,6 +54,18 @@ const PhaserComponent = () => {
     
         function create() {
             const background = this.add.image(0, 0, 'table').setOrigin(0, 0);
+            const deckBack = this.add.image(0, this.game.scale.height / 2, 'back')
+                .setScale(0.3)
+                .setOrigin(-0.2, 0.5)
+                .setInteractive(); // Ensure this line is there
+            deckBack.on('pointerdown', () => {
+                //console.log('Deck was clicked!');
+                addDragCard(Math.floor(Math.random() * 1600),Math.floor(Math.random() * 900),'red2')
+                    // You can add more actions or call other functions here.
+            });
+            //deckBack.setDepth(2); // or any value higher than all other depths
+
+        
             const expeditionss = this.add.image(0, 0, 'expeditions').setOrigin(0, 0);
             expeditionss.setDepth(1);
             
@@ -60,7 +73,7 @@ const PhaserComponent = () => {
                 this.load.image(cardName, 'cards/' + cardName + '.png');
         
                 this.load.once('complete', () => {
-                    const card = this.physics.add.image(-200, -200, cardName); // Card is defined here, after the image has loaded
+                    const card = this.physics.add.image(100, 450, cardName); // Card is defined here, after the image has loaded
         
                     let scaleX = this.game.scale.width / card.width / 6;
                     let scaleY = this.game.scale.height / card.height / 6;
